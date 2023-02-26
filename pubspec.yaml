@@ -1,0 +1,126 @@
+name: invertar_us
+description: A new Flutter project for orgnise solar invertar
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.18.4 <3.0.0'
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^2.0.0
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.5
+  get: ^4.6.1
+  # DateTime
+  #  jiffy: ^5.0.0
+  #  intl: ^0.17.0
+  http: ^0.13.4
+  # Images
+  cached_network_image: ^3.2.0
+  image_picker: ^0.7.2+1
+  # Animate
+  show_up_animation: ^2.0.0
+  auto_animated: ^3.1.0
+  # Google Map
+  #  flutter_polyline_points: ^1.0.0
+  #  google_maps_flutter: ^2.2.1
+  #  geolocator: ^9.0.2
+  #  geocoding: ^2.0.5
+  # Firebase And Notification
+  #  firebase_messaging: ^14.0.1
+  #  firebase_core: ^2.0.0
+  #  flutter_local_notifications: ^12.0.2
+
+  # Local Data Cache
+  shared_preferences: ^2.0.17
+  path: ^1.8.0
+  # Qrcode
+  #  qr_flutter: ^4.0.0
+  #  scan: ^1.6.0
+  #  grouped_list: ^5.1.2
+  #  url_launcher: ^6.1.6
+  #  dropdown_search: ^5.0.3
+  #  badges: ^2.0.3
+  # Icon
+  flutter_svg: ^1.1.5
+  font_awesome_flutter: ^10.2.1
+  fluttericon: ^2.0.0
+  dartz: ^0.10.1
+  # Google Auth
+  #  google_sign_in: ^5.4.2
+  device_preview: ^1.1.0  #^0.7.5
+  #  responsive_builder: ^0.4.3
+  #  image_pickers: ^2.0.0+2
+  flutter_otp_text_field: ^1.1.1
+  lottie: ^1.4.2
+  scroll_bottom_navigation_bar: ^4.0.0
+  animated_theme_switcher: "^2.0.5"
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/
+    - assets/lottie/
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo-Regular.ttf
+        - asset: assets/fonts/Cairo-Bold.ttf
+          weight: 700
+    - family: Combo
+      fonts:
+        - asset: assets/fonts/Combo-Regular.ttf
+          weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
