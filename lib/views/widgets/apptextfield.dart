@@ -9,28 +9,32 @@ class AppTextField extends StatelessWidget {
     required this.onChanged,
     required this.validator,
     this.obscureText = false,
+    this.autofocus = false,
     this.onTap,
-    required this.textFieldController,
+    required this.textFieldController, required this.onSubmit,
+
   }) : super(key: key);
 
   late String type;
   late bool obscureText;
+  late bool autofocus;
   late IconData iconData;
   late TextInputType inputType;
   late String? Function(String?)? onChanged;
   late String? Function(String?)? validator;
   final void Function()? onTap;
+  final Future<Null> Function() onSubmit;
   late TextEditingController textFieldController;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-      child: TextFormField(
+      child: TextFormField(onFieldSubmitted: (value) => onSubmit(),
         textAlign: TextAlign.center,
         controller: textFieldController,
         validator: validator,
-        keyboardType: inputType,
+        keyboardType: inputType,autofocus: autofocus,
         obscureText: obscureText,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
@@ -39,6 +43,7 @@ class AppTextField extends StatelessWidget {
             borderSide: const BorderSide(),
             borderRadius: BorderRadius.circular(18),
           ),
+
           suffixIcon: IconButton(
             onPressed: onTap,
             icon: Icon(
@@ -59,7 +64,6 @@ class AppTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
           ),
         ),
-
         onChanged: onChanged,
       ),
     );

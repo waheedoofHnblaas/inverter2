@@ -6,12 +6,9 @@ class LoginData {
 
   LoginData(this.crud);
 
-  loginData({
-    required String username,
-    required String password,
-  }) async {
+  loginData({required String username, required String password}) async {
     var response = await crud.postData(
-      AppLinks.loginLink,
+      serverLinkHost+sloginLink,
       {
         'Cookie':
             'csrftoken=tG4ZCRwxd5EMcHrk2oXBsUmpeY2DEs8u; sessionid=pgly2nidpuviqmn5plv2573k4sjqok7w'

@@ -10,7 +10,7 @@ class UserDetails {
     required String token,
   }) async {
     var response = await crud.getData(
-      AppLinks.getUserDetails,
+      serverLinkHost+sgetUserDetails,
       {
         'Authorization': 'Token $token',
         'Cookie':

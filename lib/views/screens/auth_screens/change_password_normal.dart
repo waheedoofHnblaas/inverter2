@@ -41,6 +41,9 @@ class ChangePasswordNormalPage extends StatelessWidget {
                           GetBuilder<ChangePasswordNormalController>(
                               builder: (controller) {
                             return AppTextField(
+                              onSubmit: () async{
+
+                              },
                               textFieldController: controller.password1,
                               obscureText: controller.showText,
                               onTap: () {
@@ -63,6 +66,9 @@ class ChangePasswordNormalPage extends StatelessWidget {
                           GetBuilder<ChangePasswordNormalController>(
                               builder: (controller) {
                             return AppTextField(
+                              onSubmit: () async{
+
+                              },
                               textFieldController: controller.password2,
                               obscureText: controller.showText,
                               onTap: () {

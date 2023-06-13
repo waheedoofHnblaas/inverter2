@@ -12,12 +12,7 @@ class InitialBinding extends Bindings {
   @override
   void dependencies() {
     Get.put(Crud());
-    Get.put(GetMaterialController());
     Get.put(LoginControllerImp());
-    Get.put(SystemUserControllerImp());
-    Get.put(UserSettingController());
-    Get.put(InverterSettingsController());
-    Get.put(InverterCommandsController());
 
   }
 }

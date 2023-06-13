@@ -6,105 +6,137 @@ import '../../../core/class/statusrequest.dart';
 import '../apploginbutton.dart';
 
 class DrawerWidget extends StatelessWidget {
-  DrawerWidget();
-
-  // SystemControllerImp controller;
+  DrawerWidget({super.key});
 
   SystemUserControllerImp homeController = Get.find();
+
   @override
   Widget build(BuildContext context) {
     DeleteUserController deleteUserController = Get.put(DeleteUserController());
     return SafeArea(
       child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  homeController.username,
-                  style: Get.textTheme.bodyText1,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ListTile(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      homeController.username,
+                      style: Get.textTheme.bodyText1,
+                    ),
+                    homeController.isAdmin == true
+                        ? Text(
+                            ' is Admin',
+                            style: Get.textTheme.bodyText2,
+                          )
+                        : Text(
+                            ' is Normal User',
+                            style: Get.textTheme.bodyText2,
+                          ),
+                  ],
                 ),
-                homeController.isAdmin == true
-                    ? Text(
-                        '  is Admin',
-                        style: Get.textTheme.bodyText2,
-                      )
-                    : Text(
-                        '  is Normal User',
-                        style: Get.textTheme.bodyText2,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ListTile(
+                title: Text(
+                  'User Authentication',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(color: Get.theme.primaryColor,fontSize: 21),
+                ),
+              ),
+              homeController.isAdmin
+                  ? Column(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            homeController.toRegisterPage();
+                          },
+                          child: const ListTile(
+                            title: Text('Register new user'),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            homeController.toChangePasswordPage();
+                          },
+                          child: const ListTile(
+                            title: Text('Change Password'),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            homeController.toChangePasswordNormalPage();
+                          },
+                          child: const ListTile(
+                            title: Text('Change Normal Password'),
+                          ),
+                        ),
+                        GetBuilder<DeleteUserController>(
+                            builder: (deleteController) {
+                          if (deleteController.statusRequest ==
+                              StatusRequest.success) {
+                            return InkWell(
+                              onTap: () async {
+                                await deleteUserController.deleteUser();
+                              },
+                              child: const ListTile(
+                                title: Text('Delete Normal User'),
+                              ),
+                            );
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
+                        }),
+                        InkWell(
+                          onTap: () {
+                            homeController.logout();
+                          },
+                          child: const ListTile(
+                            title: Text('logout'),
+                          ),
+                        ),
+                      ],
+                    )
+                  : InkWell(
+                      onTap: () {
+                        homeController.logout();
+                      },
+                      child: const ListTile(
+                        title: Text('logout'),
                       ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: IconButton(
-                onPressed: () {
+                    ),
+              const SizedBox(
+                height: 20,
+              ),
+
+              ListTile(
+                title: Text(
+                  'Settings',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(color: Get.theme.primaryColor,fontSize: 21),
+                ),
+              ),
+              Divider(),
+              InkWell(
+                onTap: () {
                   homeController.toInverterSettingsPage();
                 },
-                icon: const Icon(Icons.settings, size: 40),
+                child: const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: ListTile(
+                    title: Text('Edit Inverter Settings'),
+                  ),
+                ),
               ),
-            ),
-            SizedBox(
-              width: Get.width / 1.4,
-              child: Text(
-                'User Authentication',
-                textAlign: TextAlign.start,
-                style: TextStyle(color: Get.theme.primaryColor),
-              ),
-            ),
-            homeController.isAdmin
-                ? Column(
-                    children: [
-                      AppSignUpAndLoginButton(
-                        text: 'Register new user',
-                        onPressed: () {
-                          homeController.toRegisterPage();
-                        },
-                      ),
-                      AppSignUpAndLoginButton(
-                        text: 'Change Password',
-                        onPressed: () {
-                          homeController.toChangePasswordPage();
-                        },
-                      ),
-                      AppSignUpAndLoginButton(
-                        text: 'Change Password of Normal User',
-                        onPressed: () {
-                          homeController.toChangePasswordNormalPage();
-                        },
-                      ),
-                      GetBuilder<DeleteUserController>(
-                          builder: (deleteController) {
-                        if (deleteController.statusRequest ==
-                            StatusRequest.success) {
-                          return AppSignUpAndLoginButton(
-                            text: 'Delete Normal User',
-                            onPressed: () async {
-                              await deleteUserController.deleteUser();
-                            },
-                          );
-                        } else {
-                          return const CircularProgressIndicator();
-                        }
-                      }),
-                      AppSignUpAndLoginButton(
-                        text: 'logout',
-                        onPressed: () {
-                          homeController.logout();
-                        },
-                      ),
-                    ],
-                  )
-                : AppSignUpAndLoginButton(
-              text: 'logout',
-              onPressed: () {
-                homeController.logout();
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

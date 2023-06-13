@@ -1,4 +1,7 @@
 import 'package:get/get.dart';
+import 'package:invertar_us/controllers/home_controllers/inverter_data_controller.dart';
+import 'package:invertar_us/controllers/home_controllers/inverter_settings_controller.dart';
+import 'package:invertar_us/controllers/home_controllers/user_setting_controller.dart';
 import '../../core/class/statusrequest.dart';
 import '../../core/function/handlingdata.dart';
 import '../../core/services/services.dart';
@@ -21,7 +24,6 @@ class SystemUserControllerImp extends GetxController {
     super.onInit();
   }
 
-  @override
   Future getUserData() async {
     statusRequest = StatusRequest.loading;
     update();
@@ -42,11 +44,7 @@ class SystemUserControllerImp extends GetxController {
         );
       }
     } else {
-      Get.defaultDialog(
-        title: 'Warning',
-        middleText: 'something is wrong',
-        backgroundColor: Get.theme.backgroundColor,
-      );
+      Get.snackbar('Warring', 'Connection Error');
       statusRequest = StatusRequest.failure;
     }
     // dataModel = DataModel.fromJson(AppStaticData.data);
@@ -63,6 +61,11 @@ class SystemUserControllerImp extends GetxController {
   }
 
   void logout() {
+    InverterDataController().timer.cancel();
+    InverterDataController().dispose();
+    UserSettingController().dispose();
+    InverterSettingsController().dispose();
+    SystemUserControllerImp().dispose();
     myServices.sharedPreferences.clear().whenComplete(() {
       Get.offAllNamed(AppPages.login);
     });
@@ -81,6 +84,7 @@ class SystemUserControllerImp extends GetxController {
   }
 
   void toInverterSettingsPage() {
+    UserSettingController().update();
     Get.toNamed(AppPages.inverterSettingPage);
   }
 }

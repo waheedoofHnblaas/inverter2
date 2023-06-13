@@ -12,13 +12,14 @@ class Crud {
       String urlLink, Map<String, String>? headers, Map data) async {
     try {
       if (await checkInternet()) {
+        print(urlLink);
         var response =
             await http.post(Uri.parse(urlLink), headers: headers, body: data);
+        print('==========${response.body}================');
+
         if (response.statusCode == 200 || response.statusCode == 201) {
           Map responceBody = jsonDecode(response.body);
           print('==========responceBody.length================');
-          print(responceBody.length);
-          print('==========Crud================');
           return Right(responceBody);
         } else {
           return const Left(StatusRequest.failure);
@@ -31,17 +32,44 @@ class Crud {
     }
   }
 
+  Future<Either<StatusRequest, Map>> putUserData(
+      String urlLink, Map<String, String>? headers, Map data) async {
+    try {
+      if (await checkInternet()) {
+        print(data);
+        var response = await http.put(
+          Uri.parse(urlLink),
+          headers: headers,
+          body: data,
+        );
+        print('=============putData========');
+        print(response.body.length  );
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          Map responceBody = jsonDecode(response.body);
+          return Right(responceBody);
+        } else {
+          return const Left(StatusRequest.failure);
+        }
+      } else {
+        return const Left(StatusRequest.offline);
+      }
+    } catch (e) {
+      print(e.toString());
+      return const Left(StatusRequest.serverExp);
+    }
+  }
+
   Future<Either<StatusRequest, Map>> putData(
       String urlLink, Map<String, String>? headers, String data) async {
     try {
+      print('=====================j');
       if (await checkInternet()) {
+        print(data);
         var response =
             await http.put(Uri.parse(urlLink), headers: headers, body: data);
+               print(response.body);
         if (response.statusCode == 200 || response.statusCode == 201) {
           Map responceBody = jsonDecode(response.body);
-          print('==========responceBody.length================');
-          print(responceBody.length);
-          print('==========Crud================');
           return Right(responceBody);
         } else {
           return const Left(StatusRequest.failure);
@@ -64,9 +92,7 @@ class Crud {
         );
         if (response.statusCode == 200 || response.statusCode == 201) {
           Map responceBody = jsonDecode(response.body);
-          print('==========responceBody.length================');
-          print(responceBody.length);
-          print('==========Crud================');
+
           return Right(responceBody);
         } else {
           return const Left(StatusRequest.failure);

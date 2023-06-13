@@ -1,8 +1,8 @@
 import 'dart:async';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-
+import 'package:invertar_us/controllers/home_controllers/system_user_controller.dart';
+import 'package:invertar_us/links.dart';
 import '../../core/class/statusrequest.dart';
 import '../../core/function/handlingdata.dart';
 import '../../core/services/services.dart';
@@ -17,6 +17,7 @@ abstract class LoginController extends GetxController {
 
 class LoginControllerImp extends LoginController {
   TextEditingController username = TextEditingController();
+  TextEditingController link = TextEditingController(text: 'http://0.0.0.0:8000');
   late TextEditingController password = TextEditingController();
   late GlobalKey<FormState> formState = GlobalKey<FormState>();
   late bool showText = true;
@@ -31,6 +32,7 @@ class LoginControllerImp extends LoginController {
 
   @override
   login() async {
+
     if (username.text.isNotEmpty) {
       print('login prep 1');
       prep();
@@ -50,7 +52,7 @@ class LoginControllerImp extends LoginController {
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     if (myServices.sharedPreferences.getString('username') != null) {
       username = TextEditingController(
         text: myServices.sharedPreferences.getString('username').toString(),
@@ -58,8 +60,12 @@ class LoginControllerImp extends LoginController {
       password = TextEditingController(
         text: myServices.sharedPreferences.getString('password').toString(),
       );
+      link = TextEditingController(
+        text: myServices.sharedPreferences.getString('link').toString(),
+      );
+
       update();
-      login();
+      await login();
     }
 
     super.onInit();
@@ -75,53 +81,51 @@ class LoginControllerImp extends LoginController {
 
   Future<void> prep() async {
     {
+      serverLinkHost=link.text;
       statusRequest = StatusRequest.loading;
       update();
-
-      print('login response wait ...');
       Timer(const Duration(seconds: 15), () {
         if (statusRequest == StatusRequest.loading) {
           statusRequest = StatusRequest.failure;
           update();
-          Get.defaultDialog(
-            title: 'Warning',
-            middleText: 'server access error',
-            backgroundColor: Get.theme.backgroundColor,
-          );
+          Get.snackbar('Warning',  'timeout');
+
+          return;
         }
       });
       var response = await loginData.loginData(
         username: username.text,
         password: password.text,
       );
-      print('login response');
-      print(response);
       statusRequest = handlingData(response);
+
+      print(statusRequest);
       if (statusRequest == StatusRequest.success) {
         print('login response success');
 
         if (response['key'] != null) {
-          print('login response success key');
-
           myServices.sharedPreferences.setString('token', response['key']);
           myServices.sharedPreferences.setString('username', username.text);
           myServices.sharedPreferences.setString('password', password.text);
+          myServices.sharedPreferences.setString('link', link.text);
           print(response['key']);
-
+          SystemUserControllerImp().username = SystemUserControllerImp()
+              .myServices
+              .sharedPreferences
+              .get('username')
+              .toString();
+          Get.put(SystemUserControllerImp());
           Get.offNamed(AppPages.systemData);
         } else {
           Get.showSnackbar(
             GetSnackBar(
-              title: response['non_field_errors'][0],
+              title: response['non_field_errors'][0] ?? '',
             ),
-          );
+          ).show();
         }
       } else {
-        Get.defaultDialog(
-          title: 'Warning',
-          middleText: 'something is wrong',
-          backgroundColor: Get.theme.backgroundColor,
-        );
+        Get.snackbar('Warning', 'Connection Error');
+
         statusRequest = StatusRequest.failure;
       }
 

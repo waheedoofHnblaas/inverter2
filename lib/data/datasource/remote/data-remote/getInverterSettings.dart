@@ -10,7 +10,7 @@ class InverterSettingsData {
     required String token,
   }) async {
     var response = await crud.getData(
-      AppLinks.getInverterSettingsInfo,
+      serverLinkHost+sgetInverterSettingsInfo,
       {
         'Authorization': 'Token $token',
         'Cookie':

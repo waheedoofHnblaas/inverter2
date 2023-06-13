@@ -9,8 +9,9 @@ class UserSettingData {
   getUserSettingData({
     required String token,
   }) async {
+    print('====================${serverLinkHost+suser_setting}=========================');
     var response = await crud.getData(
-      AppLinks.user_setting,
+      serverLinkHost+suser_setting,
       {
         'Authorization': 'Token $token',
         'Cookie':

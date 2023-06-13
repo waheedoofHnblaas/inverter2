@@ -10,7 +10,7 @@ class FaultsModel {
   String? opvShortWarning;
   String? inverterVoltageTooLowFault;
   String? inverterVoltageTooHighFault;
-  String? overTemperatureFault;
+  String? overTemperatureFault; //10
   String? fanLockedFault;
   String? batteryVoltageToHighFault;
   String? batteryLowAlarmWarning;
@@ -20,7 +20,7 @@ class FaultsModel {
   String? eepromFault;
   String? inverterOverCurrentFault;
   String? inverterSoftFailFault;
-  String? selfTestFailFault;
+  String? selfTestFailFault; //20
   String? opDcVoltageOverFault;
   String? batOpenFault;
   String? currentSensorFailFault;
@@ -30,7 +30,7 @@ class FaultsModel {
   String? mpptOverloadFault;
   String? mpptOverloadWarning;
   String? batteryTooLowToChargeWarning;
-  String? createAt;
+  String? createAt; //30
 
   FaultsModel(
       {this.sCommand,

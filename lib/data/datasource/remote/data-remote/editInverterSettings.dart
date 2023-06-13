@@ -10,7 +10,7 @@ class EditInverterSettingsData {
 
   editInverterSettingsData({required String token, required Map body}) async {
     var response = await crud.putData(
-      AppLinks.editInverterSetting,
+      serverLinkHost+seditInverterSetting,
       {
         'Authorization': 'Token $token',
         'Content-Type': 'application/json',

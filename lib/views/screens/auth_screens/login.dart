@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:invertar_us/links.dart';
 
 import '../../../controllers/auth_controller/login_contoller.dart';
 import '../../../core/class/handelingview.dart';
@@ -14,11 +14,6 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(
-      () => LoginControllerImp(),
-      fenix: true,
-    );
-
     return Scaffold(
       body: SafeArea(
         child: GetBuilder<LoginControllerImp>(builder: (controller) {
@@ -35,12 +30,43 @@ class LoginPage extends StatelessWidget {
                         addAutomaticKeepAlives: true,
                         semanticIndexOffset: 100,
                         [
+                          IconButton(
+                            onPressed: () {
+                              controller.myServices.sharedPreferences.clear();
+                            },
+                            icon: const Icon(Icons.delete_outline),
+                          ),
                           const SizedBox(
                             height: 150,
                           ),
                           AppTextField(
-                            textFieldController:controller.username,
+                            onSubmit: () async {
+                              print('object');
+                              await controller.login();
+                            },
+                            textFieldController: controller.link,
+                            type: 'link',
+                            iconData: Icons.link,
+                            inputType: TextInputType.text,
+                            onChanged: (val) {
+                              return null;
+                            },
+                            validator: (val) {
+                              print('save: $val');
+                              controller.myServices.sharedPreferences
+                                  .setString('link', val!);
+                              controller.link =
+                                  TextEditingController(text: val);
 
+                              return validInput(val, 8, 50, 'password');
+                            },
+                          ),
+                          const SizedBox(
+                            height: 60,
+                          ),
+                          AppTextField(
+                            onSubmit: () async {},
+                            textFieldController: controller.username,
                             type: 'username',
                             iconData: Icons.person,
                             inputType: TextInputType.name,
@@ -57,6 +83,9 @@ class LoginPage extends StatelessWidget {
                               obscureText: controller.showText,
                               onTap: () {
                                 controller.changeShow();
+                              },
+                              onSubmit: () async {
+                                await controller.login();
                               },
                               validator: (val) {
                                 controller.password =
@@ -78,13 +107,6 @@ class LoginPage extends StatelessWidget {
                               await controller.login();
                             },
                           ),
-                          // AppLoginSignUp(
-                          //   textone: 'you don\'t have account ?',
-                          //   texttwo: 'sign up',
-                          //   onPressed: () {
-                          //     controller.toRegister();
-                          //   },
-                          // )
                         ],
                       ),
                     )

@@ -1,4 +1,9 @@
+import 'dart:async';
+import 'dart:math';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:invertar_us/controllers/home_controllers/user_setting_controller.dart';
 import 'package:invertar_us/core/class/statusrequest.dart';
 import 'package:invertar_us/core/function/handlingdata.dart';
 import 'package:invertar_us/core/services/services.dart';
@@ -10,42 +15,63 @@ class InverterDataController extends GetxController {
   final InfoData infoData = InfoData(Get.find());
   MyServices myServices = Get.find();
   String username = '';
+  UserSettingController userSettingController = Get.find();
+  late int readTime = 5;
+  int reqIndex = 0;
 
-  List<Map<String, dynamic>> dataList = [];
-  List<Map<String, dynamic>> faultsList = [];
+  Timer timer = Timer(const Duration(seconds: 10), () {});
+
+  List<Map<String, dynamic>> dataList1 = [];
+  List<Map<String, dynamic>> faultsList1 = [];
+
+  RxBool read = false.obs;
+
+  double projectedPower = 0;
 
   @override
   void onInit() {
-    getInfoData();
+    getInfoData(true);
+    repeatReading();
     super.onInit();
   }
 
-  Future getInfoData() async {
-    dataList.clear();
-    faultsList.clear();
-    statusRequest = StatusRequest.loading;
-    update();
-    Map<String, dynamic> response = await infoData.getInfoData(
+  repeatReading() async {
+    readTime = await userSettingController.getUserSettingData();
+
+    print(readTime);
+    timer = Timer.periodic(
+      Duration(seconds: readTime),
+      (t) {
+        print(readTime);
+        read.value = !read.value;
+        getInfoData2();
+      },
+    );
+
+    await getProjectedPower();
+  }
+
+  Future getInfoData2() async {
+    List<Map<String, dynamic>> dataList2 = [];
+    List<Map<String, dynamic>> faultsList2 = [];
+
+    var response2 = await infoData.getInfoData(
       token: myServices.sharedPreferences.getString('token').toString(),
     );
-    // print('===========getInfoData====response========');
-    // print(response);
-    statusRequest = handlingData(response);
+    statusRequest = handlingData(response2);
     if (statusRequest == StatusRequest.success) {
-      if (response['Success'] != null) {
-        print('==========getInfoData====batteryChargingCurrent=======');
-
-        DataListModel.fromJson(response['data List'][0])
+      if (response2['Success'] != null) {
+        DataListModel.fromJson(response2['data List'][0])
             .data!
             .toJson()
             .forEach((key, value) {
-          dataList.add({key: value});
+          dataList2.add({key: value});
         });
-        DataListModel.fromJson(response['data List'][0])
+        DataListModel.fromJson(response2['data List'][0])
             .faults!
             .toJson()
             .forEach((key, value) {
-          faultsList.add({key: value});
+          faultsList2.add({key: value});
         });
       } else {
         Get.showSnackbar(
@@ -55,15 +81,108 @@ class InverterDataController extends GetxController {
         );
       }
     } else {
-      Get.defaultDialog(
-        title: 'Warning',
-        middleText: 'server error',
-        backgroundColor: Get.theme.backgroundColor,
-      );
+      // Get.snackbar('Warning', 'Connection Error',
+      //     snackStyle: SnackStyle.GROUNDED, onTap: (v) {});
       statusRequest = StatusRequest.failure;
     }
-    // dataModel = DataModel.fromJson(AppStaticData.data);
+    if (dataList1.toString() == dataList2.toString() &&
+        faultsList1.toString() == faultsList2.toString()) {
+      print('========request $reqIndex=======');
+      reqIndex++;
+    } else {
+      print('=========update read getInfoData=====');
+      await getInfoData(false);
+    }
+  }
+
+  Future getInfoData(bool showLoading) async {
+    dataList1.clear();
+    faultsList1.clear();
+    if (showLoading) {
+      statusRequest = StatusRequest.loading;
+      update();
+    }
+
+    var response = await infoData.getInfoData(
+      token: myServices.sharedPreferences.getString('token').toString(),
+    );
+    statusRequest = handlingData(response);
+    if (statusRequest == StatusRequest.success) {
+      if (response['Success'] != null) {
+        DataListModel.fromJson(response['data List'][0])
+            .data!
+            .toJson()
+            .forEach((key, value) {
+          // if (key == 'ac_input_voltage') {
+          //   print('$key ==== $value');
+          //   ac++;
+          //   value += ac;
+          //   print('$key ==== $value');
+          // }
+
+          dataList1.add({key: value});
+        });
+        DataListModel.fromJson(response['data List'][0])
+            .faults!
+            .toJson()
+            .forEach((key, value) {
+          faultsList1.add({key: value});
+        });
+      } else {
+        Get.snackbar('Warning', 'Auth Error');
+      }
+    } else {
+      Get.snackbar('Warning', 'Server Error');
+
+      statusRequest = StatusRequest.failure;
+    }
 
     update();
+  }
+
+  int currentPage = 0;
+
+  PageController pageController = PageController();
+
+  void changeScroller(int page) {
+    print(page);
+    if (page > 0) {
+      pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else if (page == 0) {
+      pageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  List condsList = [];
+
+  void add(int messageIndex) {
+    if (condsList.contains(messageIndex)) {
+    } else {
+      condsList.add(messageIndex);
+    }
+    update();
+  }
+
+  void remove(int messageIndex) {
+    if (condsList.contains(messageIndex)) {
+      condsList.remove(messageIndex);
+    }
+    update();
+  }
+
+  getProjectedPower() {
+    Timer.periodic(Duration(seconds: readTime), (timer) {
+     projectedPower = 3000 + (Random().nextInt(500)/3);
+     projectedPower = projectedPower;
+     update();
+     print('projectedPower : ');
+     print(projectedPower);
+    });
   }
 }

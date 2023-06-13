@@ -10,7 +10,7 @@ class DeleteUserData {
     required String token,
   }) async {
     var response = await crud.deleteData(
-      AppLinks.delete_user,
+      serverLinkHost+sdelete_user,
       {
         'Authorization': 'Token $token',
         'Cookie':

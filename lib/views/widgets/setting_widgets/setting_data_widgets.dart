@@ -1,55 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:invertar_us/controllers/home_controllers/inverter_settings_controller.dart';
 import 'package:invertar_us/views/widgets/setting_widgets/choises_widget.dart';
 import 'package:invertar_us/views/widgets/setting_widgets/slider_widget.dart';
-Widget settingDataCard(text,val,inverterSettingsController,index,commandModel) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      SizedBox(
-        width: Get.width / 1.8,
-        child: Text(
-          text,
+
+Widget settingDataCard(
+  text,
+  val,
+  index,
+  commandModel,
+) {
+  return Container(
+    margin: const EdgeInsets.all(10),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SizedBox(
+          width: Get.width / 2,
+          child: Text(
+            text,
+          ),
         ),
-      ),
-      SizedBox(
-        width: Get.width / 3.1,
-        child: Text(
-          val,
+        Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(11)),
+          ),
+          width: Get.width / 4.5,
+          child: Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Text(
+              val,
+            ),
+          ),
         ),
-      ),
-      inverterSettingsController.showEdit
-          ? IconButton(
-        onPressed: () {
-          if (val == 'enabled') {
-            inverterSettingsController
-                .editInverterSettingsMap[index] = 'disabled';
-            inverterSettingsController.update();
-          } else if (val == 'disabled') {
-            inverterSettingsController
-                .editInverterSettingsMap[index] = 'enabled';
-            inverterSettingsController.update();
-          } else {
-            Get.defaultDialog(
-              title: text,
-              content: commandModel.boundries!.min != null
-                  ? sliderWidget(index, commandModel)
-                  : chiosesWidget(index, commandModel),
-            );
-          }
-        },
-        icon: Icon(
-          Icons.edit,
-          color: Get.theme.primaryColor,
-        ),
-      )
-          : IconButton(
-        onPressed: () {},
-        icon: Icon(
-          Icons.edit,
-          color: Get.theme.scaffoldBackgroundColor,
-        ),
-      )
-    ],
+
+        GetBuilder<InverterSettingsController>(
+            builder: (inverterSettingsController) {
+              return inverterSettingsController.showEdit
+                  ? IconButton(
+                onPressed: () {
+                  if (val == 'enabled') {
+                    inverterSettingsController.editInverterSettingsMap[index] =
+                    'disabled';
+                    inverterSettingsController.update();
+                  } else if (val == 'disabled') {
+                    inverterSettingsController.editInverterSettingsMap[index] =
+                    'enabled';
+                    inverterSettingsController.update();
+                  } else {
+                    Get.defaultDialog(
+                      title: text,
+                      content: commandModel.boundries!.min != null
+                          ? sliderWidget(index, commandModel)
+                          : chiosesWidget(index, commandModel),
+                    );
+                  }
+                },
+                icon: Icon(
+                  Icons.edit,
+                  color: Get.theme.primaryColor,
+                ),
+              )
+                  : IconButton(
+                onPressed: () {
+                  print('not active');
+                },
+                icon: Icon(
+                  Icons.edit,
+                  color: Colors.blueAccent.withOpacity(0.1),
+                ),
+              );
+            }),
+
+
+
+      ],
+    ),
   );
 }

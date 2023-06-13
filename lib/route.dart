@@ -5,6 +5,7 @@ import 'package:invertar_us/views/screens/auth_screens/login.dart';
 import 'package:invertar_us/views/screens/auth_screens/registerNewUser.dart';
 import 'package:invertar_us/views/screens/home_screens/home_system_data.dart';
 import 'package:invertar_us/views/screens/home_screens/inverter_settings_data.dart';
+import 'package:invertar_us/views/screens/home_screens/user_setting_data.dart';
 
 class AppPages {
   static const register = '/register';
@@ -14,6 +15,7 @@ class AppPages {
 
   static const systemData = '/systemData';
   static const inverterSettingPage = '/inverterSettingPage';
+  static const userSettingPage = '/userSettingPage';
 
   static List<GetPage<dynamic>>? routes = [
     GetPage(
@@ -39,6 +41,10 @@ class AppPages {
     GetPage(
       name: AppPages.inverterSettingPage,
       page: () => InverterSettingPage(),
+    ),
+    GetPage(
+      name: AppPages.userSettingPage,
+      page: () => const UserSettingPage(),
     ),
   ];
 }

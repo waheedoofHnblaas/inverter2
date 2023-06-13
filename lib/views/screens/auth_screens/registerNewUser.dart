@@ -37,6 +37,9 @@ class RegisterNewUserPage extends StatelessWidget {
                             height: 150,
                           ),
                           AppTextField(
+                            onSubmit: () async{
+
+                            },
                             textFieldController: controller.username,
                             type: 'username',
                             iconData: Icons.person,
@@ -51,6 +54,9 @@ class RegisterNewUserPage extends StatelessWidget {
                           GetBuilder<RegisterControllerImp>(
                               builder: (controller) {
                             return AppTextField(
+                              onSubmit: () async{
+
+                              },
                               textFieldController: controller.password,
                               obscureText: controller.showText,
                               onTap: () {

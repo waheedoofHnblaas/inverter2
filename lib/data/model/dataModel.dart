@@ -4,22 +4,22 @@ class DataModel {
   double? acInputVoltage;
   double? acInputFrequency;
   double? acOutputVoltage;
-  double? acOutputFrequency;
+  double? acOutputFrequency; //5
   int? acOutputApparentPower;
   int? acOutputActivePower;
   int? acOutputLoad;
   int? busVoltage;
-  double? batteryVoltage;
+  double? batteryVoltage; //10
   int? batteryChargingCurrent;
   int? batteryCapacity;
   int? inverterHeatSinkTemperature;
   double? pvInputCurrentForBattery;
-  double? pvInputVoltage;
+  int? pvInputVoltage;
   double? batteryVoltageFromScc;
   int? batteryDischargeCurrent;
   int? isSbuPriorityVersionAdded;
   int? isConfigurationChanged;
-  int? isSccFirmwareUpdated;
+  int? isSccFirmwareUpdated; //20
   int? isLoadOn;
   int? isBatteryVoltageToSteadyWhileCharging;
   int? isChargingOn;
@@ -29,7 +29,7 @@ class DataModel {
   int? rsv2;
   int? pvInputPower;
   int? isChargingToFloat;
-  int? isSwitchedOn;
+  int? isSwitchedOn; //30
   int? isReserved;
   String? createAt;
 

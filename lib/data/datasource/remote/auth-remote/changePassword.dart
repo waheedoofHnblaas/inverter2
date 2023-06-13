@@ -13,7 +13,7 @@ class ChangePasswordData {
     required bool normal,
   }) async {
     var response = await crud.postData(
-      normal ? AppLinks.change_password_normal : AppLinks.change_password,
+      normal ? serverLinkHost+schange_password_normal : serverLinkHost+schange_password,
       {
         'Authorization': 'Token $token',
         'Cookie':

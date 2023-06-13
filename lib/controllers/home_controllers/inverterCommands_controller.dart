@@ -18,8 +18,8 @@ class InverterCommandsController extends GetxController {
   // List<CommandModel> commandOfSettingsList = [];
 
   @override
-  void onInit() {
-    getCommandsData();
+  Future<void> onInit() async {
+   await getCommandsData();
     super.onInit();
   }
 
@@ -27,7 +27,7 @@ class InverterCommandsController extends GetxController {
     inverterCommandsList.clear();
     statusRequest = StatusRequest.loading;
     update();
-    Map<String, dynamic> response =
+    var response =
         await inverterCommandsData.getInverterCommandsData(
       token: myServices.sharedPreferences.getString('token').toString(),
     );
@@ -35,7 +35,6 @@ class InverterCommandsController extends GetxController {
     // print(response);
     statusRequest = handlingData(response);
     if (statusRequest == StatusRequest.success) {
-
       if (response['Success']) {
         for (CommandModel command
             in InverterCommandsModel.fromJson(response).commandsList!) {
@@ -46,18 +45,13 @@ class InverterCommandsController extends GetxController {
           });
         }
       } else {
-        Get.showSnackbar(
-          const GetSnackBar(
-            title: 'auth error',
-          ),
-        );
+
+        Get.snackbar('Warning', 'auth error',);
+
       }
     } else {
-      Get.defaultDialog(
-        title: 'Warning',
-        middleText: 'server error',
-        backgroundColor: Get.theme.backgroundColor,
-      );
+      Get.snackbar('Warning', 'server error');
+
       statusRequest = StatusRequest.failure;
     }
     print('getCommandsData');

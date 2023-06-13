@@ -13,7 +13,7 @@ class RegistrationData {
     required String token,
   }) async {
     var response = await crud.postData(
-      AppLinks.registeration,
+      serverLinkHost+sregisteration,
       {
         'Authorization': 'Token $token',
         'Cookie':

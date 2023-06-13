@@ -12,17 +12,17 @@ class InverterSettingsController extends GetxController {
     Get.find(),
   );
   final EditInverterSettingsData editInverterSettingsData =
-  EditInverterSettingsData(Get.find());
+      EditInverterSettingsData(Get.find());
   MyServices myServices = Get.find();
-  late Map<String, dynamic> inverterSettingsMap;
-  late List<dynamic> editInverterSettingsMap;
+  Map<String, dynamic> inverterSettingsMap ={};
+  List<dynamic> editInverterSettingsMap = [];
   bool showEdit = false;
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     print('InverterSettingsController');
     print('=======================================');
-    getSettingsData();
+    await getSettingsData();
     super.onInit();
   }
 
@@ -35,8 +35,7 @@ class InverterSettingsController extends GetxController {
   Future getSettingsData() async {
     statusRequest = StatusRequest.loading;
     update();
-    Map<String, dynamic> response =
-        await inverterSettingsData.getInverterSettingsData(
+    var response = await inverterSettingsData.getInverterSettingsData(
       token: myServices.sharedPreferences.getString('token').toString(),
     );
 
@@ -49,18 +48,12 @@ class InverterSettingsController extends GetxController {
         editInverterSettingsMap = inverterSettingsMap.values.toList();
         ;
       } else {
-        Get.showSnackbar(
-          const GetSnackBar(
-            title: 'auth error',
-          ),
-        );
+        Get.snackbar('Warring', 'auth error');
+
       }
     } else {
-      Get.defaultDialog(
-        title: 'Warning',
-        middleText: 'server error',
-        backgroundColor: Get.theme.backgroundColor,
-      );
+      Get.snackbar('Warring', 'server error');
+
       statusRequest = StatusRequest.failure;
     }
     update();
@@ -68,7 +61,9 @@ class InverterSettingsController extends GetxController {
 
   void setEditShow(bool show) {
     showEdit = show;
+
   }
+
   Future editSettingsData(body) async {
     statusRequest = StatusRequest.loading;
     update();
@@ -79,35 +74,21 @@ class InverterSettingsController extends GetxController {
     // print('===========getInfoData====response========');
     // print(response);
     statusRequest = handlingData(response);
-    print(response);
+    print(statusRequest);
 
     if (statusRequest == StatusRequest.success) {
       if (response['Success']) {
         statusRequest = StatusRequest.success;
-        Get.showSnackbar(
-          GetSnackBar(
-            message: 'update has done',
-            duration: const Duration(seconds: 5),
-            onTap: (snack) {
-              Get.back();
-            },
-          ),
-        );
+        await getSettingsData();
+        Get.snackbar('Update', 'you change settings');
         Get.back();
-        //  getSettingsInfoData();
       } else {
-        Get.showSnackbar(
-          const GetSnackBar(
-            title: 'auth error',
-          ),
-        );
+        Get.snackbar('Warring', response['Message']);
       }
     } else {
-      Get.defaultDialog(
-        title: 'Warning',
-        middleText: 'server error',
-        backgroundColor: Get.theme.backgroundColor,
-      );
+
+      Get.snackbar('Warning',  'server error',);
+
       statusRequest = StatusRequest.failure;
     }
     update();
