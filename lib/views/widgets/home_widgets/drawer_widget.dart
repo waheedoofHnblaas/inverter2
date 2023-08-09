@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:invertar_us/controllers/home_controllers/user_setting_controller.dart';
+import 'package:invertar_us/links.dart';
 import '../../../controllers/auth_controller/deleteUser_controller.dart';
 import '../../../controllers/home_controllers/system_user_controller.dart';
 import '../../../core/class/statusrequest.dart';
@@ -48,7 +50,7 @@ class DrawerWidget extends StatelessWidget {
                 title: Text(
                   'User Authentication',
                   textAlign: TextAlign.start,
-                  style: TextStyle(color: Get.theme.primaryColor,fontSize: 21),
+                  style: TextStyle(color: Get.theme.primaryColor, fontSize: 21),
                 ),
               ),
               homeController.isAdmin
@@ -94,6 +96,48 @@ class DrawerWidget extends StatelessWidget {
                             return const CircularProgressIndicator();
                           }
                         }),
+                        GetBuilder<SystemUserControllerImp>(
+                            builder: (sysController) {
+                          if (sysController.statusRequest ==
+                              StatusRequest.loading) {
+                            return const CircularProgressIndicator();
+                          } else {
+                            return InkWell(
+                              onTap: () async {
+                                UserSettingController userSettings = Get.find();
+                                await homeController.reset(
+                                  userSettings
+                                      .userSettingModel.inverterSerialNumber
+                                      .toString(),
+                                );
+                              },
+                              child: const ListTile(
+                                title: Text('Reset'),
+                              ),
+                            );
+                          }
+                        }),
+                        GetBuilder<SystemUserControllerImp>(
+                            builder: (sysController) {
+                          if (sysController.statusRequest2 ==
+                              StatusRequest.loading) {
+                            return const CircularProgressIndicator();
+                          } else {
+                            return InkWell(
+                              onTap: () async {
+                                UserSettingController userSettings = Get.find();
+                                await homeController.resetSettings(
+                                  userSettings
+                                      .userSettingModel.inverterSerialNumber
+                                      .toString(),
+                                );
+                              },
+                              child: const ListTile(
+                                title: Text('Reset Inverter Settings'),
+                              ),
+                            );
+                          }
+                        }),
                         InkWell(
                           onTap: () {
                             homeController.logout();
@@ -115,12 +159,11 @@ class DrawerWidget extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-
               ListTile(
                 title: Text(
                   'Settings',
                   textAlign: TextAlign.start,
-                  style: TextStyle(color: Get.theme.primaryColor,fontSize: 21),
+                  style: TextStyle(color: Get.theme.primaryColor, fontSize: 21),
                 ),
               ),
               Divider(),

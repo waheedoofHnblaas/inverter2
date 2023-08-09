@@ -24,8 +24,7 @@ class MyApp extends StatelessWidget {
       initialBinding: InitialBinding(),
       title: 'Flutter Demo',
       theme: ThemeData(
-        appBarTheme:  AppBarTheme(
-          toolbarHeight: Get.height/14,
+        appBarTheme:  const AppBarTheme(
           elevation: 0,
           centerTitle: true,
           backgroundColor: Colors.white,

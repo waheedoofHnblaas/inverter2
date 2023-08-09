@@ -17,10 +17,13 @@ String sdelete_user = '/rest-auth/user/delete/';
 // =============================User Setting=================================
 String suser_setting = '/api/user/settings/get/';
 String suser_settings_edite = '/api/user/settings/edit/';
+String calibrate_ldr_sensor = '/api/calibrate_ldr_sensor/';
 
 //========================    home    ===========================
 String sgetUserDetails = '/rest-auth/user/';
 String sgetDataInfo = '/api/data/get/';
+String sresetData = '/reset/';
+String sresetSettingsData = '/api/reset/inverter_parameters/';
 
 //========================    inverter    ===========================
 String sgetInverterSettingsInfo = '/api/inverter/settings/get/';

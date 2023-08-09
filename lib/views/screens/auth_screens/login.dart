@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:invertar_us/controllers/home_controllers/system_user_controller.dart';
+import 'package:invertar_us/core/class/statusrequest.dart';
 import 'package:invertar_us/links.dart';
 
 import '../../../controllers/auth_controller/login_contoller.dart';
+import '../../../controllers/home_controllers/user_setting_controller.dart';
 import '../../../core/class/handelingview.dart';
 import '../../../core/function/validinput.dart';
 import '../../widgets/apploginbutton.dart';
@@ -23,22 +26,25 @@ class LoginPage extends StatelessWidget {
               child: Form(
                 key: controller.formState,
                 child: CustomScrollView(
+                  scrollDirection: Axis.vertical,
                   slivers: [
+                    // SizedBox(height: Get.height/10,),
                     const AppSliverAppBar(title: 'Login'),
                     SliverList(
                       delegate: SliverChildListDelegate(
                         addAutomaticKeepAlives: true,
                         semanticIndexOffset: 100,
                         [
-                          IconButton(
-                            onPressed: () {
-                              controller.myServices.sharedPreferences.clear();
-                            },
-                            icon: const Icon(Icons.delete_outline),
-                          ),
-                          const SizedBox(
-                            height: 150,
-                          ),
+                          // IconButton(
+                          //   onPressed: () async {
+                          //     await controller.myServices.sharedPreferences
+                          //         .clear();
+                          //   },
+                          //   icon: const Icon(Icons.delete_outline),
+                          // ),
+                          // const SizedBox(
+                          //   height: 150,
+                          // ),
                           AppTextField(
                             onSubmit: () async {
                               print('object');
@@ -77,6 +83,7 @@ class LoginPage extends StatelessWidget {
                               return validInput(val!, 4, 20, 'username');
                             },
                           ),
+
                           GetBuilder<LoginControllerImp>(builder: (controller) {
                             return AppTextField(
                               textFieldController: controller.password,
@@ -106,6 +113,38 @@ class LoginPage extends StatelessWidget {
                             onPressed: () async {
                               await controller.login();
                             },
+                          ),
+
+                          InkWell(
+                            onTap: () async {
+                              Get.defaultDialog(
+                                title: 'type inverter serial number',
+                                onConfirm: () async {
+                                  Get.back();
+                                  await controller.reset(
+                                    controller.serialNumber.text,
+                                  );
+                                },
+                                content: Column(
+                                  children: [
+                                    AppTextField(
+                                      type: 'serial num',
+                                      iconData: Icons.numbers,
+                                      inputType: TextInputType.number,
+                                      onChanged: (p0) {},
+                                      validator: (p0) {},
+                                      textFieldController:
+                                          controller.serialNumber,
+                                      onSubmit: () async {},
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            child: const ListTile(
+                              title:
+                                  Center(child: Text('Reset Server')),
+                            ),
                           ),
                         ],
                       ),

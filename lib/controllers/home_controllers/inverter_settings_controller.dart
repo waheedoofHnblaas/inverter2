@@ -79,9 +79,9 @@ class InverterSettingsController extends GetxController {
     if (statusRequest == StatusRequest.success) {
       if (response['Success']) {
         statusRequest = StatusRequest.success;
-        await getSettingsData();
-        Get.snackbar('Update', 'you change settings');
         Get.back();
+        await getSettingsData();
+        Get.snackbar('Update', 'you change settings successfully');
       } else {
         Get.snackbar('Warring', response['Message']);
       }

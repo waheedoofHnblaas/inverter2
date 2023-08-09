@@ -15,23 +15,14 @@ class TitleWidget extends StatelessWidget {
     return GetBuilder<UserSettingController>(builder: (userSettingController) {
       return HandelingView(
         statusRequest: userSettingController.statusRequest,
-        widget: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text(
-              '${userSettingController.userSettingModel.homeName} : '
-              '${userSettingController.userSettingModel.inverterSerialNumber}',
-            ),
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () {
-                userSettingController.toUserSettingPage();
-              },
-            )
-          ],
+        widget: ListTile(
+          title: Text(
+            '${userSettingController.userSettingModel.homeName} - '
+            '${userSettingController.userSettingModel.inverterSerialNumber}',
+            style: const TextStyle(fontSize: 16),
+          ),
         ),
       );
     });
   }
-
 }

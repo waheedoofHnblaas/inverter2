@@ -13,7 +13,24 @@ class UserSettingPage extends StatelessWidget {
     UserSettingController userSettingController = Get.find();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: const Text('User Settings'),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              Get.defaultDialog(
+                title: 'calibrate sensor',
+                content: TextButton(
+                  onPressed: () async {
+                    Get.back();
+                    await userSettingController.clibLDR();
+                  },
+                  child: const Text('sure'),
+                ),
+              );
+            },
+            icon: const Icon(Icons.solar_power_outlined),
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Get.theme.primaryColor,
@@ -22,14 +39,36 @@ class UserSettingPage extends StatelessWidget {
           color: Get.theme.scaffoldBackgroundColor,
         ),
         onPressed: () async {
-          await userSettingController.setUserSettingData(
-            userSettingController.readTimeText.text,
-            userSettingController.homeNameText.text,
-            userSettingController.avgText.text,
-            userSettingController.solarPanels.text,
-            userSettingController.singleSolarMaxPower.text,
-          );
-          await userSettingController.getUserReadTimeData();
+          if (int.parse(userSettingController.readTimeText.text.toString()) >
+                  300 ||
+              int.parse(userSettingController.readTimeText.text.toString()) <
+                  5) {
+            Get.snackbar('values error', 'read time must be between 5 and 300');
+          } else if (int.parse(
+                      userSettingController.solarPanels.text.toString()) >
+                  100 ||
+              int.parse(userSettingController.solarPanels.text.toString()) <
+                  0) {
+            Get.snackbar(
+                'values error', 'solar panels must be between 0 and 100');
+          } else if (int.parse(userSettingController.singleSolarMaxPower.text
+                      .toString()) >
+                  5000 ||
+              int.parse(userSettingController.singleSolarMaxPower.text
+                      .toString()) <
+                  0) {
+            Get.snackbar(
+                'values error', 'single Solar Max Power must be between 0 and 5000');
+          } else {
+            await userSettingController.setUserSettingData(
+              userSettingController.readTimeText.text,
+              userSettingController.homeNameText.text,
+              userSettingController.avgText.text,
+              userSettingController.solarPanels.text,
+              userSettingController.singleSolarMaxPower.text,
+            );
+            await userSettingController.getUserReadTimeData();
+          }
         },
       ),
       body: GetBuilder<UserSettingController>(
@@ -120,12 +159,13 @@ class TextEditWidget extends StatelessWidget {
             inputType: keys[index] != 'home_name'
                 ? TextInputType.number
                 : TextInputType.text,
-            onChanged: null,
-            validator: (p0) {
+            onChanged: (p0) {
               print(userSettingController.readTimeText.text);
               userSettingController.readTimeText =
                   TextEditingController(text: p0);
-              return validInput(p0!, 1, 100, 'password');
+            },
+            validator: (p0) {
+              // return validInput(p0!, 1, 100, 'password');
             },
             textFieldController: userSettingController.readTimeText,
             onSubmit: () async {},
@@ -162,7 +202,8 @@ class TextEditWidget extends StatelessWidget {
             onChanged: null,
             validator: (p0) {
               print(userSettingController.solarPanels.text);
-              userSettingController.solarPanels = TextEditingController(text: p0);
+              userSettingController.solarPanels =
+                  TextEditingController(text: p0);
               return validInput(p0!, 1, 100, 'password');
             },
             textFieldController: userSettingController.solarPanels,

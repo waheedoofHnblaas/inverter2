@@ -167,6 +167,7 @@ class HomeSystemDataPage extends StatelessWidget {
     }
 
     informationButtons() {
+      SystemUserControllerImp homeController = Get.find();
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -238,72 +239,78 @@ class HomeSystemDataPage extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
-                child: Card(
-                  shape: OutlineInputBorder(
-                    borderSide: BorderSide(color: Get.theme.primaryColor),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(20),
+              !homeController.isAdmin
+                  ? Container()
+                  : Expanded(
+                      child: Card(
+                        shape: OutlineInputBorder(
+                          borderSide: BorderSide(color: Get.theme.primaryColor),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.solar_power),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              const Text(
+                                'Solar power',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Expanded(child: Container()),
+                              Text(
+                                getDataValue(28).toString(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.solar_power),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        const Text(
-                          'Solar power',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Expanded(child: Container()),
-                        Text(
-                          getDataValue(28).toString(),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
           const Divider(height: 0.8, thickness: 1),
           const Text('Battery', style: TextStyle(fontWeight: FontWeight.bold)),
           Row(
             children: [
-              Expanded(
-                child: Card(
-                  shape: OutlineInputBorder(
-                    borderSide: BorderSide(color: Get.theme.primaryColor),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(20),
+              !homeController.isAdmin
+                  ? Container()
+                  : Expanded(
+                      child: Card(
+                        shape: OutlineInputBorder(
+                          borderSide: BorderSide(color: Get.theme.primaryColor),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.electric_bolt),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              const Text(
+                                'voltage',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Expanded(child: Container()),
+                              Text(
+                                getDataValue(10).toString(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.electric_bolt),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        const Text(
-                          'voltage',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Expanded(child: Container()),
-                        Text(
-                          getDataValue(10).toString(),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
               Expanded(
                 child: Card(
                   shape: OutlineInputBorder(
@@ -339,70 +346,74 @@ class HomeSystemDataPage extends StatelessWidget {
           const Divider(height: 0.8, thickness: 1),
           const Text('Current load',
               style: TextStyle(fontWeight: FontWeight.bold)),
-          Row(
-            children: [
-              Expanded(
-                child: Card(
-                  shape: OutlineInputBorder(
-                    borderSide: BorderSide(color: Get.theme.primaryColor),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(20),
+          !homeController.isAdmin
+              ? Container()
+              : Row(
+                  children: [
+                    Expanded(
+                      child: Card(
+                        shape: OutlineInputBorder(
+                          borderSide: BorderSide(color: Get.theme.primaryColor),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.center_focus_strong_outlined),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              const Text(
+                                'wattage',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Expanded(child: Container()),
+                              Text(
+                                getDataValue(6).toString(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.center_focus_strong_outlined),
-                        const SizedBox(
-                          width: 4,
+                    Expanded(
+                      child: Card(
+                        shape: OutlineInputBorder(
+                          borderSide: BorderSide(color: Get.theme.primaryColor),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(20),
+                          ),
                         ),
-                        const Text(
-                          'wattage',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.countertops_outlined),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              const Text(
+                                'percentage',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Expanded(child: Container()),
+                              Text(
+                                getDataValue(8).toString(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
                         ),
-                        Expanded(child: Container()),
-                        Text(
-                          getDataValue(6).toString(),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ),
-              Expanded(
-                child: Card(
-                  shape: OutlineInputBorder(
-                    borderSide: BorderSide(color: Get.theme.primaryColor),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.countertops_outlined),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        const Text(
-                          'percentage',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Expanded(child: Container()),
-                        Text(
-                          getDataValue(8).toString(),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
           Row(
             children: [
               Expanded(
@@ -441,109 +452,121 @@ class HomeSystemDataPage extends StatelessWidget {
           const Divider(height: 0.8, thickness: 1),
           const Text('Remaining load',
               style: TextStyle(fontWeight: FontWeight.bold)),
-          Row(
-            children: [
-              Expanded(
-                child: Card(
-                  shape: OutlineInputBorder(
-                    borderSide: BorderSide(color: Get.theme.primaryColor),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(20),
+          Container(
+            decoration: BoxDecoration(
+                color: Get.theme.primaryColor.withOpacity(0.4),
+                borderRadius: const BorderRadius.all(Radius.circular(18))),
+            child: Row(
+              children: [
+                !homeController.isAdmin
+                    ? Container()
+                    : Expanded(
+                        child: Card(
+                          shape: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Get.theme.primaryColor),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.center_focus_strong_outlined),
+                                const SizedBox(
+                                  width: 4,
+                                ),
+                                const Text(
+                                  'wattage',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Expanded(child: Container()),
+                                Text(
+                                  (inverterDataController.projectedPower -
+                                          getDataValue(6))
+                                      .toStringAsFixed(2),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                Expanded(
+                  child: Card(
+                    shape: OutlineInputBorder(
+                      borderSide: BorderSide(color: Get.theme.primaryColor),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(20),
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.center_focus_strong_outlined),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        const Text(
-                          'wattage',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Expanded(child: Container()),
-                        Text(
-                          (inverterDataController.projectedPower -
-                                  getDataValue(6))
-                              .toStringAsFixed(2),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.countertops_outlined),
+                          const SizedBox(
+                            width: 4,
+                          ),
+                          const Text(
+                            'amper',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Expanded(child: Container()),
+                          Text(
+                            ((inverterDataController.projectedPower -
+                                        getDataValue(6)) /
+                                    getDataValue(4))
+                                .toStringAsFixed(2),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: Card(
-                  shape: OutlineInputBorder(
-                    borderSide: BorderSide(color: Get.theme.primaryColor),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.countertops_outlined),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        const Text(
-                          'amper',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Expanded(child: Container()),
-                        Text(
-                          ((inverterDataController.projectedPower -
-                                      getDataValue(6)) /
-                                  getDataValue(4))
-                              .toStringAsFixed(2),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-          Row(
-            children: [
-              Expanded(
-                child: Card(
-                  shape: OutlineInputBorder(
-                    borderSide: BorderSide(color: Get.theme.primaryColor),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(20),
+          !homeController.isAdmin
+              ? Container()
+              : Row(
+                  children: [
+                    Expanded(
+                      child: Card(
+                        shape: OutlineInputBorder(
+                          borderSide: BorderSide(color: Get.theme.primaryColor),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.electric_bolt),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              const Text(
+                                'Output voltage',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Expanded(child: Container()),
+                              Text(
+                                getDataValue(4).toString(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.electric_bolt),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        const Text(
-                          'Output voltage',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Expanded(child: Container()),
-                        Text(
-                          getDataValue(4).toString(),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ],
                 ),
-              ),
-            ],
-          ),
         ],
       );
     }
@@ -736,8 +759,14 @@ class HomeSystemDataPage extends StatelessWidget {
                 child: Container(),
               ),
             ),
-            const SizedBox(
-              width: 30,
+            IconButton(
+              icon: const Icon(
+                Icons.settings,
+                size: 20,
+              ),
+              onPressed: () {
+                UserSettingController().toUserSettingPage();
+              },
             ),
           ],
         ),

@@ -9,6 +9,7 @@ import 'package:invertar_us/route.dart';
 import '../../core/class/statusrequest.dart';
 import '../../core/function/handlingdata.dart';
 import '../../core/services/services.dart';
+import '../../data/datasource/remote/data-remote/getCalibLDR.dart';
 import '../../data/datasource/remote/data-remote/getUserSetting.dart';
 import '../../data/model/userSettingModel.dart';
 
@@ -16,6 +17,7 @@ class UserSettingController extends GetxController {
   StatusRequest statusRequest = StatusRequest.loading;
   final UserSettingData userSettingData = UserSettingData(Get.find());
   final EditUserSettingsData userSettingEdit = EditUserSettingsData(Get.find());
+  final CalibLDRData calibLDRData = CalibLDRData(Get.find());
   MyServices myServices = Get.find();
   UserSetting userSettingModel = UserSetting();
   UserSetting userSettingModel2 = UserSetting();
@@ -55,6 +57,35 @@ class UserSettingController extends GetxController {
       text: userSettingModel.homeName.toString(),
     );
     super.onInit();
+  }
+
+  Future clibLDR() async {
+    statusRequest = StatusRequest.loading;
+    update();
+
+    var response = await calibLDRData.getCalibLDRData(
+      token: myServices.sharedPreferences.getString('token').toString(),
+    );
+
+    print(response);
+    print(response);
+    print(response);
+    print(response);
+    statusRequest = handlingData(response);
+    if (statusRequest == StatusRequest.success) {
+      if (response['Success']) {
+        await getUserSettingData();
+      } else {
+        Get.snackbar('Warning', response['Message']);
+      }
+    } else {
+      Get.snackbar('Warning', response['Message']);
+
+      statusRequest = StatusRequest.failure;
+    }
+
+    statusRequest = StatusRequest.success;
+    update();
   }
 
   Future<int> getUserReadTimeData() async {

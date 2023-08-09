@@ -7,6 +7,7 @@ import '../../core/class/statusrequest.dart';
 import '../../core/function/handlingdata.dart';
 import '../../core/services/services.dart';
 import '../../data/datasource/remote/auth-remote/login.dart';
+import '../../data/datasource/remote/data-remote/resetData.dart';
 import '../../route.dart';
 
 abstract class LoginController extends GetxController {
@@ -17,13 +18,16 @@ abstract class LoginController extends GetxController {
 
 class LoginControllerImp extends LoginController {
   TextEditingController username = TextEditingController();
-  TextEditingController link = TextEditingController(text: 'http://0.0.0.0:8000');
+  TextEditingController link =
+      TextEditingController(text: 'http://0.0.0.0:8000');
   late TextEditingController password = TextEditingController();
+  late TextEditingController serialNumber = TextEditingController();
   late GlobalKey<FormState> formState = GlobalKey<FormState>();
   late bool showText = true;
   StatusRequest? statusRequest = StatusRequest.none;
   final LoginData loginData = LoginData(Get.find());
   MyServices myServices = Get.find();
+
 
   changeShow() {
     showText = !showText;
@@ -32,7 +36,6 @@ class LoginControllerImp extends LoginController {
 
   @override
   login() async {
-
     if (username.text.isNotEmpty) {
       print('login prep 1');
       prep();
@@ -81,14 +84,14 @@ class LoginControllerImp extends LoginController {
 
   Future<void> prep() async {
     {
-      serverLinkHost=link.text;
+      serverLinkHost = link.text;
       statusRequest = StatusRequest.loading;
       update();
       Timer(const Duration(seconds: 15), () {
         if (statusRequest == StatusRequest.loading) {
           statusRequest = StatusRequest.failure;
           update();
-          Get.snackbar('Warning',  'timeout');
+          Get.snackbar('Warning', 'timeout');
 
           return;
         }
@@ -132,5 +135,36 @@ class LoginControllerImp extends LoginController {
       update();
       print('validate');
     }
+  }
+
+  final ResetData resetData = ResetData(Get.find());
+
+  reset(String inverterSerialNumber) async {
+    statusRequest = StatusRequest.loading;
+    update();
+    var response = await resetData.resetData(
+      inverterNumber: inverterSerialNumber,
+    );
+    statusRequest = handlingData(response);
+    print(response);
+    if (statusRequest == StatusRequest.success) {
+      if (response['Message'].toString() != '') {
+        // logout();
+        Get.defaultDialog(
+          title: 'Warning',
+          middleText: response['Message'].toString(),
+          backgroundColor: Get.theme.backgroundColor,
+        );
+      }
+    } else {
+      Get.defaultDialog(
+        title: 'Warning',
+        middleText: 'something is wrong',
+        backgroundColor: Get.theme.backgroundColor,
+      );
+      statusRequest = StatusRequest.failure;
+    }
+    update();
+    print('validate');
   }
 }

@@ -96,8 +96,7 @@ class InverterDataController extends GetxController {
   }
 
   Future getInfoData(bool showLoading) async {
-    dataList1.clear();
-    faultsList1.clear();
+
     if (showLoading) {
       statusRequest = StatusRequest.loading;
       update();
@@ -107,6 +106,8 @@ class InverterDataController extends GetxController {
       token: myServices.sharedPreferences.getString('token').toString(),
     );
     statusRequest = handlingData(response);
+    dataList1.clear();
+    faultsList1.clear();
     if (statusRequest == StatusRequest.success) {
       if (response['Success'] != null) {
         DataListModel.fromJson(response['data List'][0])

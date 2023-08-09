@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
+import 'package:invertar_us/controllers/auth_controller/deleteUser_controller.dart';
 import 'package:invertar_us/controllers/home_controllers/inverter_data_controller.dart';
 import 'package:invertar_us/controllers/home_controllers/inverter_settings_controller.dart';
 import 'package:invertar_us/controllers/home_controllers/user_setting_controller.dart';
+import 'package:invertar_us/data/datasource/remote/data-remote/resetData.dart';
 import '../../core/class/statusrequest.dart';
 import '../../core/function/handlingdata.dart';
 import '../../core/services/services.dart';
@@ -9,11 +11,13 @@ import '../../data/datasource/remote/auth-remote/userDetails.dart';
 import '../../route.dart';
 
 class SystemUserControllerImp extends GetxController {
-  StatusRequest statusRequest = StatusRequest.loading;
+  StatusRequest statusRequest = StatusRequest.none;
+  StatusRequest statusRequest2 = StatusRequest.none;
   final UserDetails userDetails = UserDetails(Get.find());
   MyServices myServices = Get.find();
   String username = '';
   bool isAdmin = false;
+
 
   @override
   void onInit() async {
@@ -86,5 +90,68 @@ class SystemUserControllerImp extends GetxController {
   void toInverterSettingsPage() {
     UserSettingController().update();
     Get.toNamed(AppPages.inverterSettingPage);
+  }
+
+  final ResetData resetData = ResetData(Get.find());
+
+  reset(String inverterSerialNumber) async {
+    statusRequest = StatusRequest.loading;
+    update();
+    var response = await resetData.resetData(
+      inverterNumber: inverterSerialNumber,
+    );
+    statusRequest = handlingData(response);
+    print(response);
+    if (statusRequest == StatusRequest.success) {
+      if (response['Message'].toString() != '') {
+        logout();
+        Get.defaultDialog(
+          title: 'Warning',
+          middleText: response['Message'].toString(),
+          backgroundColor: Get.theme.backgroundColor,
+        );
+
+      }
+    } else {
+      Get.defaultDialog(
+        title: 'Warning',
+        middleText: 'something is wrong',
+        backgroundColor: Get.theme.backgroundColor,
+      );
+      statusRequest = StatusRequest.failure;
+    }
+    update();
+    print('validate');
+  }
+
+  resetSettings(String inverterSerialNumber) async {
+    statusRequest2 = StatusRequest.loading;
+    update();
+    var response = await resetData.resetSettingsData(
+      inverterNumber: inverterSerialNumber,
+    );
+    statusRequest2 = handlingData(response);
+    print(response);
+    if (statusRequest2 == StatusRequest.success) {
+      if (response['Message'].toString() != '') {
+        // logout();
+        Get.defaultDialog(
+          title: 'Warning',
+          middleText: response['Message'].toString(),
+          backgroundColor: Get.theme.backgroundColor,
+        );
+
+        statusRequest2 = StatusRequest.success;
+      }
+    } else {
+      Get.defaultDialog(
+        title: 'Warning',
+        middleText: 'something is wrong',
+        backgroundColor: Get.theme.backgroundColor,
+      );
+      statusRequest2 = StatusRequest.failure;
+    }
+    update();
+    print('validate');
   }
 }
