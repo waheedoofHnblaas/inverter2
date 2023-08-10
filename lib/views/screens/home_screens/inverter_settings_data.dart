@@ -5,13 +5,10 @@ import 'package:invertar_us/controllers/home_controllers/inverterCommands_contro
 import 'package:invertar_us/controllers/home_controllers/inverter_settings_controller.dart';
 import 'package:invertar_us/core/class/handelingview.dart';
 import 'package:invertar_us/data/model/inverterCommandsModel.dart';
-import 'package:invertar_us/views/widgets/setting_widgets/choises_widget.dart';
 import 'package:invertar_us/views/widgets/setting_widgets/setting_data_widgets.dart';
-import 'package:invertar_us/views/widgets/setting_widgets/slider_widget.dart';
 
 class InverterSettingPage extends StatelessWidget {
   const InverterSettingPage({Key? key}) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +20,8 @@ class InverterSettingPage extends StatelessWidget {
       body: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
-          color: Colors.blue.withOpacity(0.5),
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          color: Get.theme.scaffoldBackgroundColor.withOpacity(0.5),
+          borderRadius: const BorderRadius.all(Radius.circular(11)),
         ),
         child: GetBuilder<InverterSettingsController>(
             builder: (inverterSettingsController) {
@@ -33,33 +30,53 @@ class InverterSettingPage extends StatelessWidget {
                 statusRequest: inverterSettingsController.statusRequest,
                 widget: Stack(
                   children: [
+                    // Text('=======inverterSettings======='),
+                    // Text(inverterSettingsController.inverterSettingsMap.keys
+                    //     .toList()
+                    //     .toString()),
+                    // Text('=======inverterCommandsList======='),
+                    // Text(
+                    //   inverterCommandsController
+                    //       .inverterCommandsList[1].commandShortcutInSettings
+                    //       .toString(),
+                    // ),
                     ListView.builder(
                       itemCount: inverterSettingsController
-                          .editInverterSettingsMap.length,
+                          .editInverterSettingsValuesList.length,
                       itemBuilder: (context, index) {
                         String text = inverterSettingsController
                             .inverterSettingsMap.keys
                             .toList()[index];
 
                         String val = inverterSettingsController
-                            .editInverterSettingsMap[index]
+                            .editInverterSettingsValuesList[index]
                             .toString();
                         CommandModel commandModel = CommandModel();
-                        inverterSettingsController.showEdit = false;
+                        // inverterSettingsController.showEdit = false;
 
-                        for (CommandModel command
-                            in inverterCommandsController.inverterCommandsList) {
-                          print('objec=============================$index');
+                        bool show = false;
+                        for (CommandModel command in inverterCommandsController
+                            .inverterCommandsList) {
                           if (command.commandShortcutInSettings.toString() ==
-                              text) {
+                              text.toString()) {
                             commandModel = command;
-                            inverterSettingsController.setEditShow(true);
-                            break;
+                            show = true;
+                            return settingDataCard(
+                              text,
+                              val,
+                              index,
+                              commandModel,
+                              true,
+                            );
                           }
                         }
-
-                        return settingDataCard(text, val,
-                             index, commandModel);
+                        return settingDataCard(
+                          text,
+                          val,
+                          index,
+                          commandModel,
+                          false,
+                        );
                       },
                     ),
                     Positioned(
@@ -79,15 +96,23 @@ class InverterSettingPage extends StatelessWidget {
                             int index = 0;
                             inverterSettingsController.inverterSettingsMap
                                 .forEach((key, value) {
-                              print(key);
+                              // print(key);
                               inverterSettingsController
                                       .inverterSettingsMap[key] =
                                   inverterSettingsController
-                                      .editInverterSettingsMap[index];
+                                      .editInverterSettingsValuesList[index];
                               index++;
                             });
 
-                            print(inverterSettingsController.inverterSettingsMap);
+                            print(
+                                'editSettingsData=============================');
+                            print(
+                                inverterSettingsController.inverterSettingsMap);
+
+                            print(
+                                'editSettingsData=============================');
+                            print(inverterCommandsController
+                                .inverterCommandsList);
                             await inverterSettingsController.editSettingsData(
                               {
                                 "Success": true,

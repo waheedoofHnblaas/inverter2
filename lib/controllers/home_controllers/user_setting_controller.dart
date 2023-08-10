@@ -56,6 +56,15 @@ class UserSettingController extends GetxController {
     homeNameText = TextEditingController(
       text: userSettingModel.homeName.toString(),
     );
+    if (!myServices.sharedPreferences.containsKey('${homeNameText.text}homey')) {
+      await myServices.sharedPreferences.setStringList('${homeNameText.text}homey', [
+        myServices.sharedPreferences.getString('link').toString(),
+        myServices.sharedPreferences.getString('username').toString(),
+        myServices.sharedPreferences.getString('password').toString(),
+        homeNameText.text,
+      ]);
+    }
+
     super.onInit();
   }
 

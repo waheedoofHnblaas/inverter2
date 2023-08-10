@@ -95,6 +95,7 @@ class InverterDataController extends GetxController {
     }
   }
 
+  String ss = '';
   Future getInfoData(bool showLoading) async {
 
     if (showLoading) {
@@ -102,14 +103,20 @@ class InverterDataController extends GetxController {
       update();
     }
 
-    var response = await infoData.getInfoData(
+    Map response =
+
+
+
+    await infoData.getInfoData(
       token: myServices.sharedPreferences.getString('token').toString(),
     );
+    ss = response.toString();
+
     statusRequest = handlingData(response);
-    dataList1.clear();
-    faultsList1.clear();
     if (statusRequest == StatusRequest.success) {
-      if (response['Success'] != null) {
+      if (response['Success'] ) {
+        dataList1.clear();
+        faultsList1.clear();
         DataListModel.fromJson(response['data List'][0])
             .data!
             .toJson()
@@ -128,17 +135,17 @@ class InverterDataController extends GetxController {
             .toJson()
             .forEach((key, value) {
           faultsList1.add({key: value});
+
         });
+        update();
       } else {
         Get.snackbar('Warning', 'Auth Error');
       }
     } else {
       Get.snackbar('Warning', 'Server Error');
-
       statusRequest = StatusRequest.failure;
     }
 
-    update();
   }
 
   int currentPage = 0;

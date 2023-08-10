@@ -15,8 +15,8 @@ class InverterSettingsController extends GetxController {
       EditInverterSettingsData(Get.find());
   MyServices myServices = Get.find();
   Map<String, dynamic> inverterSettingsMap ={};
-  List<dynamic> editInverterSettingsMap = [];
-  bool showEdit = false;
+  List<dynamic> editInverterSettingsValuesList = [];
+  // bool showEdit = false;
 
   @override
   Future<void> onInit() async {
@@ -27,7 +27,7 @@ class InverterSettingsController extends GetxController {
   }
 
   resetEditSettingsMap() {
-    editInverterSettingsMap = inverterSettingsMap.values.toList();
+    editInverterSettingsValuesList = inverterSettingsMap.values.toList();
     update();
     print('resetEditSettingsMap');
   }
@@ -35,9 +35,51 @@ class InverterSettingsController extends GetxController {
   Future getSettingsData() async {
     statusRequest = StatusRequest.loading;
     update();
-    var response = await inverterSettingsData.getInverterSettingsData(
-      token: myServices.sharedPreferences.getString('token').toString(),
-    );
+    Map response =
+    {
+      "Success": true,
+      "Inverter Settings": {
+        "ac_input_voltage": 220.0,
+        "ac_input_current": 13.6,
+        "ac_output_voltage": 220.0,
+        "ac_output_frequency": 50.0,
+        "ac_output_current": 13.6,
+        "ac_output_apparent_power": 3000,
+        "ac_output_active_power": 3000,
+        "battery_voltage": 24.0,
+        "battery_recharge_voltage": 23.0,
+        "battery_under_voltage": 21.5,
+        "battery_bulk_charge_voltage": 29.2,
+        "battery_float_charge_voltage": 27.0,
+        "battery_type": "Flooded",
+        "max_ac_charging_current": "20",
+        "max_charging_current": 30,
+        "input_voltage_range": "UPS",
+        "output_source_priority": "Utility first",
+        "charger_source_priority": "Solar + Utility",
+        "max_parallel_units": 1,
+        "machine_type": "Off Grid",
+        "topology": "transformerless",
+        "output_mode": "single machine output",
+        "battery_redischarge_voltage": 27.0,
+        "pv_ok_condition": "As long as one unit of inverters has connect PV, parallel system will consider PV OK",
+        "pv_power_balance": "PV input max power will be the sum of the max charged power and loads power",
+        "lcd_backlight": "enabled",
+        "primary_source_interrupt_alarm": "enabled",
+        "record_fault_code": "enabled",
+        "buzzer": "disabled",
+        "overload_bypass": "disabled",
+        "power_saving": "disabled",
+        "lcd_reset_to_default": "disabled",
+        "overload_restart": "disabled",
+        "over_temperature_restart": "disabled",
+        "create at": "2023-08-10 09:18:56"
+      }
+    };
+
+    // await inverterSettingsData.getInverterSettingsData(
+    //   token: myServices.sharedPreferences.getString('token').toString(),
+    // );
 
     statusRequest = handlingData(response);
     if (statusRequest == StatusRequest.success) {
@@ -45,9 +87,8 @@ class InverterSettingsController extends GetxController {
         inverterSettingsMap =
             InverterSettingsModel.fromJson(response['Inverter Settings'])
                 .toJson();
-        editInverterSettingsMap = inverterSettingsMap.values.toList();
-        ;
-      } else {
+        editInverterSettingsValuesList = inverterSettingsMap.values.toList();
+       } else {
         Get.snackbar('Warring', 'auth error');
 
       }
@@ -59,10 +100,10 @@ class InverterSettingsController extends GetxController {
     update();
   }
 
-  void setEditShow(bool show) {
-    showEdit = show;
-
-  }
+  // void setEditShow(bool show) {
+  //   showEdit = show;
+  //
+  // }
 
   Future editSettingsData(body) async {
     statusRequest = StatusRequest.loading;

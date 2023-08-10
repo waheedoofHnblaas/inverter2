@@ -19,20 +19,20 @@ sliderWidget(
         return Column(
           children: [
             Text(
-              inverterSettingsController.editInverterSettingsMap[index].toString(),
+              inverterSettingsController.editInverterSettingsValuesList[index].toString(),
             ),
             Slider.adaptive(
               divisions: div,
               value: double.parse(
-                inverterSettingsController.editInverterSettingsMap[index]
+                inverterSettingsController.editInverterSettingsValuesList[index]
                     .toString(),
               ),
               min: min,
               max: max,
-              label: inverterSettingsController.editInverterSettingsMap[index]
+              label: inverterSettingsController.editInverterSettingsValuesList[index]
                   .toString(),
               onChanged: (valNew) {
-                inverterSettingsController.editInverterSettingsMap[index] = valNew;
+                inverterSettingsController.editInverterSettingsValuesList[index] = valNew;
                 print(valNew);
                 inverterSettingsController.update();
               },

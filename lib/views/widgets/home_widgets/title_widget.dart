@@ -19,7 +19,7 @@ class TitleWidget extends StatelessWidget {
           title: Text(
             '${userSettingController.userSettingModel.homeName} - '
             '${userSettingController.userSettingModel.inverterSerialNumber}',
-            style: const TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 14),
           ),
         ),
       );

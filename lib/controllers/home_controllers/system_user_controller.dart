@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:invertar_us/controllers/auth_controller/deleteUser_controller.dart';
 import 'package:invertar_us/controllers/home_controllers/inverter_data_controller.dart';
 import 'package:invertar_us/controllers/home_controllers/inverter_settings_controller.dart';
 import 'package:invertar_us/controllers/home_controllers/user_setting_controller.dart';
@@ -9,6 +8,7 @@ import '../../core/function/handlingdata.dart';
 import '../../core/services/services.dart';
 import '../../data/datasource/remote/auth-remote/userDetails.dart';
 import '../../route.dart';
+import 'inverterCommands_controller.dart';
 
 class SystemUserControllerImp extends GetxController {
   StatusRequest statusRequest = StatusRequest.none;
@@ -17,7 +17,6 @@ class SystemUserControllerImp extends GetxController {
   MyServices myServices = Get.find();
   String username = '';
   bool isAdmin = false;
-
 
   @override
   void onInit() async {
@@ -55,7 +54,6 @@ class SystemUserControllerImp extends GetxController {
     update();
   }
 
-  @override
   String getBool(int value) {
     if (value == 1) {
       return 'ON';
@@ -87,8 +85,10 @@ class SystemUserControllerImp extends GetxController {
     Get.toNamed(AppPages.changePasswordNormal);
   }
 
-  void toInverterSettingsPage() {
+  Future<void> toInverterSettingsPage() async {
     UserSettingController().update();
+    await InverterSettingsController().getSettingsData();
+    InverterSettingsController().update();
     Get.toNamed(AppPages.inverterSettingPage);
   }
 
@@ -110,7 +110,6 @@ class SystemUserControllerImp extends GetxController {
           middleText: response['Message'].toString(),
           backgroundColor: Get.theme.backgroundColor,
         );
-
       }
     } else {
       Get.defaultDialog(

@@ -18,11 +18,11 @@ class AppSignUpAndLoginButton extends StatelessWidget {
       ),
 
       width: Get.width/1.6,
-      margin: const EdgeInsets.symmetric(vertical: 11,horizontal: 20),
+      margin: const EdgeInsets.symmetric(vertical: 11,horizontal: 10),
       child: MaterialButton(
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 11),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
         onPressed: onPressed,
         child: Text(
           text,

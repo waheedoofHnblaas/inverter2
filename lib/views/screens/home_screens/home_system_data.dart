@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:invertar_us/controllers/home_controllers/inverterCommands_controller.dart';
@@ -5,6 +6,7 @@ import 'package:invertar_us/controllers/home_controllers/inverter_data_controlle
 import 'package:invertar_us/controllers/home_controllers/inverter_settings_controller.dart';
 import 'package:invertar_us/controllers/home_controllers/system_user_controller.dart';
 import 'package:invertar_us/controllers/home_controllers/user_setting_controller.dart';
+import 'package:invertar_us/core/constant/imagesassets.dart';
 import 'package:invertar_us/core/constant/messages.dart';
 import 'package:invertar_us/views/widgets/home_widgets/important_data_widget.dart';
 import '../../../core/class/handelingview.dart';
@@ -27,8 +29,9 @@ class HomeSystemDataPage extends StatelessWidget {
     );
 
     getDataValue(int index) {
-      return double.parse(
-          inverterDataController.dataList1[index].values.first.toString());
+      return double.parse(double.parse(
+        inverterDataController.dataList1[index].values.first.toString(),
+      ).toStringAsFixed(1));
     }
 
     getDataKey(int i) {
@@ -51,9 +54,9 @@ class HomeSystemDataPage extends StatelessWidget {
         width: Get.width / 1.16,
         child: Text(
           messageList[messageIndex],
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 10,
+            fontSize: Get.height / 55,
           ),
         ),
       );
@@ -148,17 +151,27 @@ class HomeSystemDataPage extends StatelessWidget {
           ),
           Positioned(
             top: 10,
-            left: Get.width / 2.4,
+            right: 10,
             child: Hero(
               tag: 'changeScroller',
-              child: CircleAvatar(
-                radius: 25,
-                backgroundColor: Get.theme.primaryColor,
-                child: IconButton(
-                    onPressed: () {
-                      inverterDataController.changeScroller(0);
-                    },
-                    icon: const Icon(Icons.keyboard_arrow_up)),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(25),
+                  ),
+                  border: Border.all(
+                    color: Get.theme.primaryColor,
+                  ),
+                ),
+                child: CircleAvatar(
+                  radius: 25,
+                  backgroundColor: Get.theme.scaffoldBackgroundColor,
+                  child: IconButton(
+                      onPressed: () {
+                        inverterDataController.changeScroller(0);
+                      },
+                      icon: const Icon(Icons.keyboard_arrow_up)),
+                ),
               ),
             ),
           )
@@ -166,10 +179,97 @@ class HomeSystemDataPage extends StatelessWidget {
       );
     }
 
+    titleCard(text, icon) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: Get.width / 3.2,
+            ),
+            Row(
+              children: [
+                icon,
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  text,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
+    cardWidget(text, value, icon) {
+      return Expanded(
+        child: Card(
+          shape: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Get.theme.primaryColor,
+              // width: 0.1,
+            ),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(18),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+            child: Row(
+              children: [
+                // const Icon(Icons.electric_bolt),
+                icon,
+                const SizedBox(
+                  width: 4,
+                ),
+                Text(
+                  text,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w100,
+                    fontSize: 14,
+                  ),
+                ),
+                Expanded(child: Container()),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    onOffWidget(bool bool) {
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(13)),
+          color: bool
+              ? Colors.greenAccent
+              : CupertinoColors.inactiveGray.withOpacity(0.2),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(bool ? 'ON' : 'OFF'),
+        ),
+      );
+    }
+
     informationButtons() {
       SystemUserControllerImp homeController = Get.find();
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
             children: [
@@ -194,11 +294,10 @@ class HomeSystemDataPage extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Expanded(child: Container()),
-                        Switch(
-                          activeColor: Colors.greenAccent,
-                          value: getDataValue(2) < 80,
-                          onChanged: (value) {},
-                        )
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: onOffWidget(getDataValue(2) > 80),
+                        ),
                       ],
                     ),
                   ),
@@ -229,11 +328,10 @@ class HomeSystemDataPage extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Expanded(child: Container()),
-                        Switch(
-                          activeColor: Colors.greenAccent,
-                          value: getDataValue(28) > 30,
-                          onChanged: (value) {},
-                        )
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: onOffWidget(getDataValue(28) > 30),
+                        ),
                       ],
                     ),
                   ),
@@ -241,217 +339,69 @@ class HomeSystemDataPage extends StatelessWidget {
               ),
               !homeController.isAdmin
                   ? Container()
-                  : Expanded(
-                      child: Card(
-                        shape: OutlineInputBorder(
-                          borderSide: BorderSide(color: Get.theme.primaryColor),
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.solar_power),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              const Text(
-                                'Solar power',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Expanded(child: Container()),
-                              Text(
-                                getDataValue(28).toString(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                  : cardWidget(
+                      'Solar power',
+                      getDataValue(28).toString(),
+                      const Icon(Icons.solar_power),
                     ),
             ],
           ),
-          const Divider(height: 0.8, thickness: 1),
-          const Text('Battery', style: TextStyle(fontWeight: FontWeight.bold)),
+          Divider(color: Get.theme.primaryColor.withOpacity(0.5)),
+          titleCard(
+            'Battery',
+            Image.asset(AppImagesAssets.battery, width: 35),
+          ),
           Row(
             children: [
               !homeController.isAdmin
                   ? Container()
-                  : Expanded(
-                      child: Card(
-                        shape: OutlineInputBorder(
-                          borderSide: BorderSide(color: Get.theme.primaryColor),
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.electric_bolt),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              const Text(
-                                'voltage',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Expanded(child: Container()),
-                              Text(
-                                getDataValue(10).toString(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                  : cardWidget(
+                      'Voltage',
+                      getDataValue(10).toString(),
+                      Image.asset(AppImagesAssets.voltmeter, width: 35),
                     ),
-              Expanded(
-                child: Card(
-                  shape: OutlineInputBorder(
-                    borderSide: BorderSide(color: Get.theme.primaryColor),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.countertops_outlined),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        const Text(
-                          'percentage',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Expanded(child: Container()),
-                        Text(
-                          getDataValue(12).toString(),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              cardWidget(
+                'Percentage',
+                getDataValue(12).toString(),
+                Image.asset(AppImagesAssets.percent, width: 15),
               ),
             ],
           ),
-          const Divider(height: 0.8, thickness: 1),
-          const Text('Current load',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+          Divider(color: Get.theme.primaryColor.withOpacity(0.5)),
+          titleCard(
+            'Current load',
+            Image.asset(AppImagesAssets.currentLoad, width: 35),
+          ),
           !homeController.isAdmin
               ? Container()
               : Row(
                   children: [
-                    Expanded(
-                      child: Card(
-                        shape: OutlineInputBorder(
-                          borderSide: BorderSide(color: Get.theme.primaryColor),
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.center_focus_strong_outlined),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              const Text(
-                                'wattage',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Expanded(child: Container()),
-                              Text(
-                                getDataValue(6).toString(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                    cardWidget(
+                      'Wattage',
+                      getDataValue(6).toString(),
+                      Image.asset(AppImagesAssets.watt, width: 35),
                     ),
-                    Expanded(
-                      child: Card(
-                        shape: OutlineInputBorder(
-                          borderSide: BorderSide(color: Get.theme.primaryColor),
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.countertops_outlined),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              const Text(
-                                'percentage',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Expanded(child: Container()),
-                              Text(
-                                getDataValue(8).toString(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                    cardWidget(
+                      'Percentage',
+                      getDataValue(8).toString(),
+                      Image.asset(AppImagesAssets.percent, width: 15),
                     ),
                   ],
                 ),
           Row(
             children: [
-              Expanded(
-                child: Card(
-                  shape: OutlineInputBorder(
-                    borderSide: BorderSide(color: Get.theme.primaryColor),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.countertops_outlined),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        const Text(
-                          'amper',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Expanded(child: Container()),
-                        Text(
-                          (getDataValue(6) / getDataValue(4))
-                              .toStringAsFixed(3),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              cardWidget(
+                'Ampere',
+                (getDataValue(6) / getDataValue(4)).toStringAsFixed(1),
+                Image.asset(AppImagesAssets.ammeter, width: 35),
               ),
             ],
           ),
-          const Divider(height: 0.8, thickness: 1),
-          const Text('Remaining load',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+          Divider(color: Get.theme.primaryColor.withOpacity(0.5)),
+          titleCard(
+            'Remaining load',
+            Image.asset(AppImagesAssets.remainingLoad, width: 35),
+          ),
           Container(
             decoration: BoxDecoration(
                 color: Get.theme.primaryColor.withOpacity(0.4),
@@ -460,73 +410,20 @@ class HomeSystemDataPage extends StatelessWidget {
               children: [
                 !homeController.isAdmin
                     ? Container()
-                    : Expanded(
-                        child: Card(
-                          shape: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Get.theme.primaryColor),
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(20),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.center_focus_strong_outlined),
-                                const SizedBox(
-                                  width: 4,
-                                ),
-                                const Text(
-                                  'wattage',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Expanded(child: Container()),
-                                Text(
-                                  (inverterDataController.projectedPower -
-                                          getDataValue(6))
-                                      .toStringAsFixed(2),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                    : cardWidget(
+                        'Wattage',
+                        (inverterDataController.projectedPower -
+                                getDataValue(6))
+                            .toStringAsFixed(1),
+                        Image.asset(AppImagesAssets.watt, width: 35),
                       ),
-                Expanded(
-                  child: Card(
-                    shape: OutlineInputBorder(
-                      borderSide: BorderSide(color: Get.theme.primaryColor),
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.countertops_outlined),
-                          const SizedBox(
-                            width: 4,
-                          ),
-                          const Text(
-                            'amper',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Expanded(child: Container()),
-                          Text(
-                            ((inverterDataController.projectedPower -
-                                        getDataValue(6)) /
-                                    getDataValue(4))
-                                .toStringAsFixed(2),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                cardWidget(
+                  'Ampere',
+                  ((inverterDataController.projectedPower - getDataValue(6)) /
+                          getDataValue(4))
+                      .toStringAsFixed(1),
+                  Image.asset(AppImagesAssets.ammeter, width: 35),
+                )
               ],
             ),
           ),
@@ -534,36 +431,10 @@ class HomeSystemDataPage extends StatelessWidget {
               ? Container()
               : Row(
                   children: [
-                    Expanded(
-                      child: Card(
-                        shape: OutlineInputBorder(
-                          borderSide: BorderSide(color: Get.theme.primaryColor),
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.electric_bolt),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              const Text(
-                                'Output voltage',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Expanded(child: Container()),
-                              Text(
-                                getDataValue(4).toString(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                    cardWidget(
+                      'Output Voltage',
+                      getDataValue(4).toString(),
+                      Image.asset(AppImagesAssets.voltmeter, width: 35),
                     ),
                   ],
                 ),
@@ -724,18 +595,34 @@ class HomeSystemDataPage extends StatelessWidget {
           ),
           Positioned(
             bottom: 20,
-            left: Get.width / 2.4,
+            // left: Get.width,
+            right: 10,
             child: Hero(
               tag: 'changeScroller',
-              child: CircleAvatar(
-                radius: 25,
-                backgroundColor: Get.theme.primaryColor,
-                child: IconButton(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(25),
+                  ),
+                  border: Border.all(
+                    color: Get.theme.primaryColor,
+                  ),
+                ),
+                child: CircleAvatar(
+                  radius: 25,
+                  backgroundColor:
+                      Get.theme.scaffoldBackgroundColor.withOpacity(0.8),
+                  child: IconButton(
                     onPressed: () {
                       inverterDataController.changeScroller(
                           inverterDataController.currentPage + 1);
                     },
-                    icon: const Icon(Icons.keyboard_arrow_down_outlined)),
+                    icon: Icon(
+                      Icons.keyboard_arrow_down_outlined,
+                      color: Get.theme.primaryColor,
+                    ),
+                  ),
+                ),
               ),
             ),
           )
@@ -747,27 +634,28 @@ class HomeSystemDataPage extends StatelessWidget {
       builder: (controller) => Scaffold(
         drawer: Drawer(child: DrawerWidget()),
         appBar: AppBar(
+          centerTitle: true,
           primary: true,
           title: const TitleWidget(),
           actions: [
             Obx(
               () => CircleAvatar(
-                radius: 10,
+                radius: 12,
                 backgroundColor: inverterDataController.read.value
                     ? Colors.greenAccent
-                    : Colors.transparent,
+                    : Colors.grey.withOpacity(0.2),
                 child: Container(),
               ),
             ),
-            IconButton(
-              icon: const Icon(
-                Icons.settings,
-                size: 20,
-              ),
-              onPressed: () {
-                UserSettingController().toUserSettingPage();
-              },
-            ),
+             SizedBox(width: Get.width/10,),
+            // IconButton(
+            //   icon: const Icon(
+            //     Icons.settings,
+            //     size: 20,
+            //   ),
+            //   onPressed: () {
+            //   },
+            // ),
           ],
         ),
         body: GetBuilder<InverterDataController>(
@@ -777,19 +665,31 @@ class HomeSystemDataPage extends StatelessWidget {
               child: Center(
                 child: HandelingRequest(
                   statusRequest: inverterDataController.statusRequest,
-                  widget: inverterDataController.dataList1.isNotEmpty
-                      ? PageView(
-                          controller: inverterDataController.pageController,
-                          onPageChanged: (int page) {
-                            inverterDataController.changeScroller(page);
-                          },
-                          scrollDirection: Axis.vertical,
-                          children: [
-                            actionsMessagesPage(),
-                            dataFaultsPage(),
-                          ],
-                        )
-                      : const Center(child: Text('No Connection')),
+                  widget:
+                      // SingleChildScrollView(
+                      //   child: Column(
+                      //     children: [
+                      //       Text(inverterDataController.dataList1.toString()),
+                      //       Text('===========responce==============='),
+                      //       Text(inverterDataController.ss.toString()),
+                      //     ],
+                      //   ),
+                      // )
+                      inverterDataController.dataList1.isNotEmpty
+                          ? PageView(
+                              controller: inverterDataController.pageController,
+                              onPageChanged: (int page) {
+                                inverterDataController.changeScroller(page);
+                              },
+                              scrollDirection: Axis.vertical,
+                              children: [
+                                actionsMessagesPage(),
+                                dataFaultsPage(),
+                              ],
+                            )
+                          : const Center(
+                              child: Text('No Connection'),
+                            ),
                 ),
               ),
             );

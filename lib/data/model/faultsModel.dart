@@ -1,4 +1,3 @@
-
 class FaultsModel {
   String? sCommand;
   String? sCommandDescription;
@@ -30,40 +29,42 @@ class FaultsModel {
   String? mpptOverloadFault;
   String? mpptOverloadWarning;
   String? batteryTooLowToChargeWarning;
-  String? createAt; //30
 
-  FaultsModel(
-      {this.sCommand,
-        this.sCommandDescription,
-        this.inverterFault,
-        this.busOverFault,
-        this.busUnderFault,
-        this.busSoftFailFault,
-        this.lineFailWarning,
-        this.opvShortWarning,
-        this.inverterVoltageTooLowFault,
-        this.inverterVoltageTooHighFault,
-        this.overTemperatureFault,
-        this.fanLockedFault,
-        this.batteryVoltageToHighFault,
-        this.batteryLowAlarmWarning,
-        this.reserved,
-        this.batteryUnderShutdownWarning,
-        this.overloadFault,
-        this.eepromFault,
-        this.inverterOverCurrentFault,
-        this.inverterSoftFailFault,
-        this.selfTestFailFault,
-        this.opDcVoltageOverFault,
-        this.batOpenFault,
-        this.currentSensorFailFault,
-        this.batteryShortFault,
-        this.powerLimitWarning,
-        this.pvVoltageHighWarning,
-        this.mpptOverloadFault,
-        this.mpptOverloadWarning,
-        this.batteryTooLowToChargeWarning,
-        this.createAt});
+  // String? createAt; //30
+
+  FaultsModel({
+    this.sCommand,
+    this.sCommandDescription,
+    this.inverterFault,
+    this.busOverFault,
+    this.busUnderFault,
+    this.busSoftFailFault,
+    this.lineFailWarning,
+    this.opvShortWarning,
+    this.inverterVoltageTooLowFault,
+    this.inverterVoltageTooHighFault,
+    this.overTemperatureFault,
+    this.fanLockedFault,
+    this.batteryVoltageToHighFault,
+    this.batteryLowAlarmWarning,
+    this.reserved,
+    this.batteryUnderShutdownWarning,
+    this.overloadFault,
+    this.eepromFault,
+    this.inverterOverCurrentFault,
+    this.inverterSoftFailFault,
+    this.selfTestFailFault,
+    this.opDcVoltageOverFault,
+    this.batOpenFault,
+    this.currentSensorFailFault,
+    this.batteryShortFault,
+    this.powerLimitWarning,
+    this.pvVoltageHighWarning,
+    this.mpptOverloadFault,
+    this.mpptOverloadWarning,
+    this.batteryTooLowToChargeWarning,
+    // this.createAt,
+  });
 
   FaultsModel.fromJson(Map<String, dynamic> json) {
     sCommand = json['_command'];
@@ -96,7 +97,7 @@ class FaultsModel {
     mpptOverloadFault = json['mppt_overload_fault'];
     mpptOverloadWarning = json['mppt_overload_warning'];
     batteryTooLowToChargeWarning = json['battery_too_low_to_charge_warning'];
-    createAt = json['create at'];
+    // createAt = json['create at'];
   }
 
   Map<String, dynamic> toJson() {
@@ -130,9 +131,8 @@ class FaultsModel {
     data['pv_voltage_high_warning'] = pvVoltageHighWarning;
     data['mppt_overload_fault'] = mpptOverloadFault;
     data['mppt_overload_warning'] = mpptOverloadWarning;
-    data['battery_too_low_to_charge_warning'] =
-        batteryTooLowToChargeWarning;
-    data['create at'] = createAt;
+    data['battery_too_low_to_charge_warning'] = batteryTooLowToChargeWarning;
+    // data['create at'] = createAt;
     return data;
   }
 }

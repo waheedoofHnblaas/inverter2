@@ -11,6 +11,94 @@ class UserSettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserSettingController userSettingController = Get.find();
+
+    cardWidget(int index, List<String> keys, List<dynamic> values) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Get.theme.primaryColor.withOpacity(0.4),
+            ),
+            color: Get.theme.scaffoldBackgroundColor.withOpacity(0.7),
+            borderRadius: const BorderRadius.all(Radius.circular(18)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 3.0,
+              horizontal: 2,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: Get.width / 2.6,
+                  child: Column(
+                    children: [
+                      Text(
+                        keys[index][0].toUpperCase() +
+                            keys[index]
+                                .replaceAll('_', ' ')
+                                .replaceRange(0, 1, ''),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(child: Container()),
+                SizedBox(
+                  width: Get.width / 2,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          index == 2
+                              ? Text('5<')
+                              : index == 3
+                              ? Text('3<')
+                              : index == 5
+                              ? Text('0<')
+                              : index == 6
+                              ? Text('0<')
+                              : Container(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  values[index].toString(),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(index == 1 ? ' volt' : '')
+                              ],
+                            ),
+                          ),
+                          index == 2
+                              ? Text('<300')
+                              : index == 3
+                              ? Text('<300')
+                              : index == 5
+                              ? Text('<100')
+                              : index == 6
+                              ? Text('<5000')
+                              : Container(),
+                        ],
+                      ),
+                      TextEditWidget(index: index),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('User Settings'),
@@ -44,6 +132,11 @@ class UserSettingPage extends StatelessWidget {
               int.parse(userSettingController.readTimeText.text.toString()) <
                   5) {
             Get.snackbar('values error', 'read time must be between 5 and 300');
+          } else if (int.parse(userSettingController.avgText.text.toString()) >
+                  300 ||
+              int.parse(userSettingController.avgText.text.toString()) < 3) {
+            Get.snackbar(
+                'values error', 'last reading avg must be between 3 and 300');
           } else if (int.parse(
                       userSettingController.solarPanels.text.toString()) >
                   100 ||
@@ -57,8 +150,8 @@ class UserSettingPage extends StatelessWidget {
               int.parse(userSettingController.singleSolarMaxPower.text
                       .toString()) <
                   0) {
-            Get.snackbar(
-                'values error', 'single Solar Max Power must be between 0 and 5000');
+            Get.snackbar('values error',
+                'single Solar Max Power must be between 0 and 5000');
           } else {
             await userSettingController.setUserSettingData(
               userSettingController.readTimeText.text,
@@ -84,45 +177,7 @@ class UserSettingPage extends StatelessWidget {
                 child: Column(
                   children: List.generate(
                     keys.length,
-                    (index) => Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Get.theme.primaryColorLight,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(11)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 3.0,
-                            horizontal: 2,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: Get.width / 2.2,
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      keys[index],
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      values[index].toString(),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              TextEditWidget(index: index)
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    (index) => cardWidget(index, keys, values),
                   ),
                 ),
               ),
@@ -132,6 +187,7 @@ class UserSettingPage extends StatelessWidget {
       ),
     );
   }
+
 }
 
 class TextEditWidget extends StatelessWidget {
@@ -154,7 +210,7 @@ class TextEditWidget extends StatelessWidget {
         return SizedBox(
           width: Get.width / 2.2,
           child: AppTextField(
-            type: keys[index].toString(),
+            type: 'Seconds',
             iconData: Icons.data_array,
             inputType: keys[index] != 'home_name'
                 ? TextInputType.number
@@ -175,7 +231,7 @@ class TextEditWidget extends StatelessWidget {
         return SizedBox(
           width: Get.width / 2.2,
           child: AppTextField(
-            type: keys[index].toString(),
+            type: 'Minutes',
             iconData: Icons.data_array,
             inputType: keys[index] != 'home_name'
                 ? TextInputType.number
@@ -194,7 +250,7 @@ class TextEditWidget extends StatelessWidget {
         return SizedBox(
           width: Get.width / 2.2,
           child: AppTextField(
-            type: keys[index].toString(),
+            type: 'Panels',
             iconData: Icons.data_array,
             inputType: keys[index] != 'home_name'
                 ? TextInputType.number
@@ -210,31 +266,11 @@ class TextEditWidget extends StatelessWidget {
             onSubmit: () async {},
           ),
         );
-      case 7:
-        return SizedBox(
-          width: Get.width / 2.2,
-          child: AppTextField(
-            type: keys[index].toString(),
-            iconData: Icons.data_array,
-            inputType: keys[index] != 'home_name'
-                ? TextInputType.number
-                : TextInputType.text,
-            onChanged: null,
-            validator: (p0) {
-              print(userSettingController.homeNameText.text);
-              userSettingController.homeNameText =
-                  TextEditingController(text: p0);
-              return validInput(p0!, 1, 100, 'password');
-            },
-            textFieldController: userSettingController.homeNameText,
-            onSubmit: () async {},
-          ),
-        );
       case 6:
         return SizedBox(
           width: Get.width / 2.2,
           child: AppTextField(
-            type: keys[index].toString(),
+            type: 'Watts',
             iconData: Icons.data_array,
             inputType: keys[index] != 'home_name'
                 ? TextInputType.number
@@ -250,19 +286,28 @@ class TextEditWidget extends StatelessWidget {
             onSubmit: () async {},
           ),
         );
-      default:
-        return IconButton(
-          onPressed: () {},
-          icon: Row(
-            children: [
-              Icon(
-                Icons.edit,
-                color: Get.theme.primaryColorLight,
-                size: 16,
-              )
-            ],
+      case 7:
+        return SizedBox(
+          width: Get.width / 2.2,
+          child: AppTextField(
+            type: '',
+            iconData: Icons.data_array,
+            inputType: keys[index] != 'home_name'
+                ? TextInputType.number
+                : TextInputType.text,
+            onChanged: null,
+            validator: (p0) {
+              print(userSettingController.homeNameText.text);
+              userSettingController.homeNameText =
+                  TextEditingController(text: p0);
+              return validInput(p0!, 1, 100, 'password');
+            },
+            textFieldController: userSettingController.homeNameText,
+            onSubmit: () async {},
           ),
         );
+      default:
+        return Container();
     }
   }
 }

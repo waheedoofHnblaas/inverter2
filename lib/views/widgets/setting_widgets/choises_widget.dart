@@ -19,14 +19,14 @@ chiosesWidget(int index, CommandModel commandModel) {
               return InkWell(
                 onTap: () {
                   inverterSettingsController
-                      .editInverterSettingsMap[
+                      .editInverterSettingsValuesList[
                   index] = choises[i].toString();
                   inverterSettingsController
                       .update();
                 },
                 child: Container(
                   color: inverterSettingsController
-                      .editInverterSettingsMap[
+                      .editInverterSettingsValuesList[
                   index] ==
                       choises[i]
                       ? Colors.greenAccent

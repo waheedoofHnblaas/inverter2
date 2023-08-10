@@ -14,7 +14,7 @@ class DataModel {
   int? batteryCapacity;
   int? inverterHeatSinkTemperature;
   double? pvInputCurrentForBattery;
-  int? pvInputVoltage;
+  double? pvInputVoltage;
   double? batteryVoltageFromScc;
   int? batteryDischargeCurrent;
   int? isSbuPriorityVersionAdded;
@@ -31,42 +31,44 @@ class DataModel {
   int? isChargingToFloat;
   int? isSwitchedOn; //30
   int? isReserved;
-  String? createAt;
 
-  DataModel(
-      {this.sCommand,
-        this.sCommandDescription,
-        this.acInputVoltage,
-        this.acInputFrequency,
-        this.acOutputVoltage,
-        this.acOutputFrequency,
-        this.acOutputApparentPower,
-        this.acOutputActivePower,
-        this.acOutputLoad,
-        this.busVoltage,
-        this.batteryVoltage,
-        this.batteryChargingCurrent,
-        this.batteryCapacity,
-        this.inverterHeatSinkTemperature,
-        this.pvInputCurrentForBattery,
-        this.pvInputVoltage,
-        this.batteryVoltageFromScc,
-        this.batteryDischargeCurrent,
-        this.isSbuPriorityVersionAdded,
-        this.isConfigurationChanged,
-        this.isSccFirmwareUpdated,
-        this.isLoadOn,
-        this.isBatteryVoltageToSteadyWhileCharging,
-        this.isChargingOn,
-        this.isSccChargingOn,
-        this.isAcChargingOn,
-        this.rsv1,
-        this.rsv2,
-        this.pvInputPower,
-        this.isChargingToFloat,
-        this.isSwitchedOn,
-        this.isReserved,
-        this.createAt});
+  // String? createAt;
+
+  DataModel({
+    this.sCommand,
+    this.sCommandDescription,
+    this.acInputVoltage,
+    this.acInputFrequency,
+    this.acOutputVoltage,
+    this.acOutputFrequency,
+    this.acOutputApparentPower,
+    this.acOutputActivePower,
+    this.acOutputLoad,
+    this.busVoltage,
+    this.batteryVoltage,
+    this.batteryChargingCurrent,
+    this.batteryCapacity,
+    this.inverterHeatSinkTemperature,
+    this.pvInputCurrentForBattery,
+    this.pvInputVoltage,
+    this.batteryVoltageFromScc,
+    this.batteryDischargeCurrent,
+    this.isSbuPriorityVersionAdded,
+    this.isConfigurationChanged,
+    this.isSccFirmwareUpdated,
+    this.isLoadOn,
+    this.isBatteryVoltageToSteadyWhileCharging,
+    this.isChargingOn,
+    this.isSccChargingOn,
+    this.isAcChargingOn,
+    this.rsv1,
+    this.rsv2,
+    this.pvInputPower,
+    this.isChargingToFloat,
+    this.isSwitchedOn,
+    this.isReserved,
+    // this.createAt,
+  });
 
   DataModel.fromJson(Map<String, dynamic> json) {
     sCommand = json['_command'];
@@ -84,7 +86,7 @@ class DataModel {
     batteryCapacity = json['battery_capacity'];
     inverterHeatSinkTemperature = json['inverter_heat_sink_temperature'];
     pvInputCurrentForBattery = json['pv_input_current_for_battery'];
-    pvInputVoltage = json['pv_input_voltage'];
+    pvInputVoltage = double.parse(json['pv_input_voltage'].toString());
     batteryVoltageFromScc = json['battery_voltage_from_scc'];
     batteryDischargeCurrent = json['battery_discharge_current'];
     isSbuPriorityVersionAdded = json['is_sbu_priority_version_added'];
@@ -92,7 +94,7 @@ class DataModel {
     isSccFirmwareUpdated = json['is_scc_firmware_updated'];
     isLoadOn = json['is_load_on'];
     isBatteryVoltageToSteadyWhileCharging =
-    json['is_battery_voltage_to_steady_while_charging'];
+        json['is_battery_voltage_to_steady_while_charging'];
     isChargingOn = json['is_charging_on'];
     isSccChargingOn = json['is_scc_charging_on'];
     isAcChargingOn = json['is_ac_charging_on'];
@@ -102,7 +104,7 @@ class DataModel {
     isChargingToFloat = json['is_charging_to_float'];
     isSwitchedOn = json['is_switched_on'];
     isReserved = json['is_reserved'];
-    createAt = json['create at'];
+    // createAt = json['create at'];
   }
 
   Map<String, dynamic> toJson() {
@@ -140,7 +142,7 @@ class DataModel {
     data['is_charging_to_float'] = isChargingToFloat;
     data['is_switched_on'] = isSwitchedOn;
     data['is_reserved'] = isReserved;
-    data['create at'] = createAt;
+    // data['create at'] = createAt;
     return data;
   }
 }

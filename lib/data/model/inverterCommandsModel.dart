@@ -76,7 +76,7 @@ class CommandModel {
 class Boundries {
   var min;
   var max;
-  Map<String,dynamic>? choices;
+  Map<dynamic,dynamic>? choices;
 
   Boundries({this.min, this.max, this.choices});
 

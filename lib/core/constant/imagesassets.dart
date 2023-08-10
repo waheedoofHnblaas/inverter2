@@ -6,6 +6,17 @@ class AppImagesAssets {
   static const String onBoardingImagePayment = '${rootImages}payment.png';
   static const String onBoardingImageTrack = '${rootImages}track.png';
 
+  //=========================solar images==================================
+
+  static const String ammeter = '${rootImages}ammeter.png';
+  static const String battery = '${rootImages}battery.png';
+  static const String currentLoad = '${rootImages}currentLoad.png';
+  static const String percent = '${rootImages}percent.png';
+  static const String remainingLoad = '${rootImages}remainingLoad.png';
+  static const String voltmeter = '${rootImages}voltmeter.png';
+  static const String watt = '${rootImages}watt.png';
+
+
   //=========================Lottie==================================
 
   static const String rootLottie = 'assets/lottie/';

@@ -28,7 +28,6 @@ class LoginControllerImp extends LoginController {
   final LoginData loginData = LoginData(Get.find());
   MyServices myServices = Get.find();
 
-
   changeShow() {
     showText = !showText;
     update();
@@ -36,7 +35,8 @@ class LoginControllerImp extends LoginController {
 
   @override
   login() async {
-    if (username.text.isNotEmpty) {
+    print(keys);
+     if (username.text.isNotEmpty) {
       print('login prep 1');
       prep();
     } else {
@@ -54,8 +54,16 @@ class LoginControllerImp extends LoginController {
     Get.offNamed(AppPages.register);
   }
 
+  List<List> keys = [];
+
   @override
   void onInit() async {
+    myServices.sharedPreferences.getKeys().forEach((key) {
+      if (key.contains('homey')) {
+        keys.add(myServices.sharedPreferences.getStringList(key)!);
+      }
+    });
+    update();
     if (myServices.sharedPreferences.getString('username') != null) {
       username = TextEditingController(
         text: myServices.sharedPreferences.getString('username').toString(),
@@ -70,7 +78,6 @@ class LoginControllerImp extends LoginController {
       update();
       await login();
     }
-
     super.onInit();
   }
 
@@ -107,10 +114,13 @@ class LoginControllerImp extends LoginController {
         print('login response success');
 
         if (response['key'] != null) {
-          myServices.sharedPreferences.setString('token', response['key']);
-          myServices.sharedPreferences.setString('username', username.text);
-          myServices.sharedPreferences.setString('password', password.text);
-          myServices.sharedPreferences.setString('link', link.text);
+          await myServices.sharedPreferences
+              .setString('token', response['key']);
+          await myServices.sharedPreferences
+              .setString('username', username.text);
+          await myServices.sharedPreferences
+              .setString('password', password.text);
+          await myServices.sharedPreferences.setString('link', link.text);
           print(response['key']);
           SystemUserControllerImp().username = SystemUserControllerImp()
               .myServices

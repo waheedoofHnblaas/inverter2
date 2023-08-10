@@ -41,7 +41,7 @@ class AppTextField extends StatelessWidget {
           hintTextDirection: TextDirection.ltr,
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(),
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(14),
           ),
 
           suffixIcon: IconButton(
@@ -59,7 +59,7 @@ class AppTextField extends StatelessWidget {
           floatingLabelBehavior: FloatingLabelBehavior.always,
           hintText: type,
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              const EdgeInsets.symmetric(horizontal: 9, vertical: 1),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
           ),

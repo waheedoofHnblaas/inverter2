@@ -40,7 +40,7 @@ class AppPages {
     ),
     GetPage(
       name: AppPages.inverterSettingPage,
-      page: () => InverterSettingPage(),
+      page: () => const InverterSettingPage(),
     ),
     GetPage(
       name: AppPages.userSettingPage,

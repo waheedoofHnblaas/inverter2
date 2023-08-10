@@ -23,36 +23,18 @@ class DrawerWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ListTile(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      homeController.username,
-                      style: Get.textTheme.bodyText1,
-                    ),
-                    homeController.isAdmin == true
-                        ? Text(
-                            ' is Admin',
-                            style: Get.textTheme.bodyText2,
-                          )
-                        : Text(
-                            ' is Normal User',
-                            style: Get.textTheme.bodyText2,
-                          ),
-                  ],
-                ),
-              ),
+
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
               ListTile(
                 title: Text(
-                  'User Authentication',
+                  'Admin Panel',
                   textAlign: TextAlign.start,
                   style: TextStyle(color: Get.theme.primaryColor, fontSize: 21),
                 ),
               ),
+              const Divider(),
               homeController.isAdmin
                   ? Column(
                       children: [
@@ -96,6 +78,46 @@ class DrawerWidget extends StatelessWidget {
                             return const CircularProgressIndicator();
                           }
                         }),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        ListTile(
+                          title: Text(
+                            'Settings',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                color: Get.theme.primaryColor, fontSize: 21),
+                          ),
+                        ),
+                        const Divider(),
+                        InkWell(
+                          onTap: () {
+                            homeController.toInverterSettingsPage();
+                          },
+                          child: const ListTile(
+                            title: Text('Edit Inverter Settings'),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            UserSettingController().toUserSettingPage();
+                          },
+                          child: const ListTile(
+                            title: Text('Edit User Settings'),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        ListTile(
+                          title: Text(
+                            'Troubleshoot',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                color: Get.theme.primaryColor, fontSize: 21),
+                          ),
+                        ),
+                        const Divider(),
                         GetBuilder<SystemUserControllerImp>(
                             builder: (sysController) {
                           if (sysController.statusRequest ==
@@ -112,7 +134,7 @@ class DrawerWidget extends StatelessWidget {
                                 );
                               },
                               child: const ListTile(
-                                title: Text('Reset'),
+                                title: Text('Reset Server'),
                               ),
                             );
                           }
@@ -156,28 +178,6 @@ class DrawerWidget extends StatelessWidget {
                         title: Text('logout'),
                       ),
                     ),
-              const SizedBox(
-                height: 20,
-              ),
-              ListTile(
-                title: Text(
-                  'Settings',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(color: Get.theme.primaryColor, fontSize: 21),
-                ),
-              ),
-              Divider(),
-              InkWell(
-                onTap: () {
-                  homeController.toInverterSettingsPage();
-                },
-                child: const Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: ListTile(
-                    title: Text('Edit Inverter Settings'),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
