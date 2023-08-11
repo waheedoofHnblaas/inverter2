@@ -18,6 +18,7 @@ String sdelete_user = '/rest-auth/user/delete/';
 String suser_setting = '/api/user/settings/get/';
 String suser_settings_edite = '/api/user/settings/edit/';
 String calibrate_ldr_sensor = '/api/calibrate_ldr_sensor/';
+String get_projected_power = '/api/projected_power/get/';
 
 //========================    home    ===========================
 String sgetUserDetails = '/rest-auth/user/';

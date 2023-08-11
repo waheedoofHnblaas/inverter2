@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:invertar_us/controllers/home_controllers/user_setting_controller.dart';
+import 'package:invertar_us/core/class/handelingview.dart';
 import 'package:invertar_us/links.dart';
 import '../../../controllers/auth_controller/deleteUser_controller.dart';
 import '../../../controllers/home_controllers/system_user_controller.dart';
@@ -23,7 +24,6 @@ class DrawerWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
               const SizedBox(
                 height: 10,
               ),
@@ -64,19 +64,17 @@ class DrawerWidget extends StatelessWidget {
                         ),
                         GetBuilder<DeleteUserController>(
                             builder: (deleteController) {
-                          if (deleteController.statusRequest ==
-                              StatusRequest.success) {
-                            return InkWell(
+                          return HandelingView(
+                            statusRequest: deleteUserController.statusRequest!,
+                            widget: InkWell(
                               onTap: () async {
                                 await deleteUserController.deleteUser();
                               },
                               child: const ListTile(
                                 title: Text('Delete Normal User'),
                               ),
-                            );
-                          } else {
-                            return const CircularProgressIndicator();
-                          }
+                            ),
+                          );
                         }),
                         const SizedBox(
                           height: 20,
@@ -98,12 +96,49 @@ class DrawerWidget extends StatelessWidget {
                             title: Text('Edit Inverter Settings'),
                           ),
                         ),
+                        // IconButton(
+                        //   onPressed: () async {
+                        //     Get.defaultDialog(
+                        //       title: 'calibrate sensor',
+                        //       content: TextButton(
+                        //         onPressed: () async {
+                        //           Get.back();
+                        //           await userSettingController.clibLDR();
+                        //         },
+                        //         child: const Text('sure'),
+                        //       ),
+                        //     );
+                        //   },
+                        //   icon: const Icon(Icons.solar_power_outlined),
+                        // )
+
+                        GetBuilder<UserSettingController>(
+                          builder: (controller) => HandelingView(
+                            statusRequest: controller.statusRequest,
+                            widget: InkWell(
+                              onTap: () async {
+                                // homeController.toInverterSettingsPage();
+                                await controller.clibLDR();
+                              },
+                              child: const ListTile(
+                                title: Text('Edit User Settings'),
+                              ),
+                            ),
+                          ),
+                        ),
                         InkWell(
-                          onTap: () {
-                            UserSettingController().toUserSettingPage();
+                          onTap: () async {
+                            Get.defaultDialog(
+                              title: 'Confirm sensor calibration? ',
+                              content: const Text(''),
+                              onConfirm: () async {
+                                Get.back();
+                                await UserSettingController().clibLDR();
+                              },
+                            );
                           },
                           child: const ListTile(
-                            title: Text('Edit User Settings'),
+                            title: Text('Calibrate LDR sensor'),
                           ),
                         ),
                         const SizedBox(

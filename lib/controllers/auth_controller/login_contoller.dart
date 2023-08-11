@@ -28,32 +28,6 @@ class LoginControllerImp extends LoginController {
   final LoginData loginData = LoginData(Get.find());
   MyServices myServices = Get.find();
 
-  changeShow() {
-    showText = !showText;
-    update();
-  }
-
-  @override
-  login() async {
-    print(keys);
-     if (username.text.isNotEmpty) {
-      print('login prep 1');
-      prep();
-    } else {
-      if (formState.currentState!.validate()) {
-        print('login prep 2');
-        prep();
-      } else {
-        print('not validate');
-      }
-    }
-  }
-
-  @override
-  toRegister() {
-    Get.offNamed(AppPages.register);
-  }
-
   List<List> keys = [];
 
   @override
@@ -79,6 +53,32 @@ class LoginControllerImp extends LoginController {
       await login();
     }
     super.onInit();
+  }
+
+  changeShow() {
+    showText = !showText;
+    update();
+  }
+
+  @override
+  login() async {
+    print(keys);
+    if (username.text.isNotEmpty) {
+      print('login prep 1');
+      prep();
+    } else {
+      if (formState.currentState!.validate()) {
+        print('login prep 2');
+        prep();
+      } else {
+        print('not validate');
+      }
+    }
+  }
+
+  @override
+  toRegister() {
+    Get.offNamed(AppPages.register);
   }
 
   @override
@@ -176,5 +176,12 @@ class LoginControllerImp extends LoginController {
     }
     update();
     print('validate');
+  }
+
+  setAuthValues(severLink, serverUserName, serverPassword) async {
+    link = TextEditingController(text: severLink);
+    username = TextEditingController(text: serverUserName);
+    password = TextEditingController(text: serverPassword);
+    await login();
   }
 }

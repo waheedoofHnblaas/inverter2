@@ -220,31 +220,34 @@ class HomeSystemDataPage extends StatelessWidget {
               Radius.circular(18),
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
-            child: Row(
-              children: [
-                // const Icon(Icons.electric_bolt),
-                icon,
-                const SizedBox(
-                  width: 4,
-                ),
-                Text(
-                  text,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w100,
-                    fontSize: 14,
+          child: SizedBox(
+            height: Get.height/18,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                children: [
+                  // const Icon(Icons.electric_bolt),
+                  icon,
+                  const SizedBox(
+                    width: 4,
                   ),
-                ),
-                Expanded(child: Container()),
-                Text(
-                  value,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                  Text(
+                    text,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w100,
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-              ],
+                  Expanded(child: Container()),
+                  Text(
+                    value,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -402,31 +405,60 @@ class HomeSystemDataPage extends StatelessWidget {
             'Remaining load',
             Image.asset(AppImagesAssets.remainingLoad, width: 35),
           ),
-          Container(
-            decoration: BoxDecoration(
-                color: Get.theme.primaryColor.withOpacity(0.4),
-                borderRadius: const BorderRadius.all(Radius.circular(18))),
-            child: Row(
-              children: [
-                !homeController.isAdmin
-                    ? Container()
-                    : cardWidget(
-                        'Wattage',
-                        (inverterDataController.projectedPower -
-                                getDataValue(6))
+          inverterDataController.errorLDRMessage == ''
+              ? Container(
+                  decoration: BoxDecoration(
+                    color: Get.theme.primaryColor.withOpacity(0.4),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(18),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      !homeController.isAdmin
+                          ? Container()
+                          : cardWidget(
+                              'Wattage',
+                              (inverterDataController.projectedPower -
+                                      getDataValue(6))
+                                  .toStringAsFixed(1),
+                              Image.asset(AppImagesAssets.watt, width: 35),
+                            ),
+                      cardWidget(
+                        'Ampere',
+                        ((inverterDataController.projectedPower -
+                                    getDataValue(6)) /
+                                getDataValue(4))
                             .toStringAsFixed(1),
-                        Image.asset(AppImagesAssets.watt, width: 35),
-                      ),
-                cardWidget(
-                  'Ampere',
-                  ((inverterDataController.projectedPower - getDataValue(6)) /
-                          getDataValue(4))
-                      .toStringAsFixed(1),
-                  Image.asset(AppImagesAssets.ammeter, width: 35),
+                        Image.asset(AppImagesAssets.ammeter, width: 35),
+                      )
+                    ],
+                  ),
                 )
-              ],
-            ),
-          ),
+              : Container(
+                  decoration: BoxDecoration(
+                    color: Get.theme.primaryColor.withOpacity(0.2),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(18),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(inverterDataController.errorLDRMessage),
+                      ),
+                      CircleAvatar(
+                        radius: 8,
+                        backgroundColor: inverterDataController.isReading
+                            ? Colors.greenAccent
+                            : CupertinoColors.inactiveGray.withOpacity(0.3),
+                        child: Container(),
+                      ),
+                    ],
+                  ),
+                ),
           !homeController.isAdmin
               ? Container()
               : Row(
@@ -647,7 +679,9 @@ class HomeSystemDataPage extends StatelessWidget {
                 child: Container(),
               ),
             ),
-             SizedBox(width: Get.width/10,),
+            SizedBox(
+              width: Get.width / 10,
+            ),
             // IconButton(
             //   icon: const Icon(
             //     Icons.settings,

@@ -13,8 +13,6 @@ class InverterSettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InverterCommandsController inverterCommandsController = Get.find();
-    InverterSettingsController inverterSettingsController = Get.find();
-    inverterSettingsController.resetEditSettingsMap();
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: Container(
@@ -30,38 +28,29 @@ class InverterSettingPage extends StatelessWidget {
                 statusRequest: inverterSettingsController.statusRequest,
                 widget: Stack(
                   children: [
-                    // Text('=======inverterSettings======='),
-                    // Text(inverterSettingsController.inverterSettingsMap.keys
-                    //     .toList()
-                    //     .toString()),
-                    // Text('=======inverterCommandsList======='),
-                    // Text(
-                    //   inverterCommandsController
-                    //       .inverterCommandsList[1].commandShortcutInSettings
-                    //       .toString(),
-                    // ),
                     ListView.builder(
                       itemCount: inverterSettingsController
                           .editInverterSettingsValuesList.length,
                       itemBuilder: (context, index) {
-                        String text = inverterSettingsController
-                            .inverterSettingsMap.keys
-                            .toList()[index];
 
                         String val = inverterSettingsController
                             .editInverterSettingsValuesList[index]
                             .toString();
+
+                        String text = inverterSettingsController
+                            .inverterSettingsMap.keys
+                            .toList()[index];
+
                         CommandModel commandModel = CommandModel();
                         // inverterSettingsController.showEdit = false;
 
-                        bool show = false;
-                        for (CommandModel command in inverterCommandsController
+                         for (CommandModel command in inverterCommandsController
                             .inverterCommandsList) {
+
                           if (command.commandShortcutInSettings.toString() ==
                               text.toString()) {
                             commandModel = command;
-                            show = true;
-                            return settingDataCard(
+                             return settingDataCard(
                               text,
                               val,
                               index,
@@ -69,7 +58,9 @@ class InverterSettingPage extends StatelessWidget {
                               true,
                             );
                           }
+
                         }
+                         inverterCommandsController.update();
                         return settingDataCard(
                           text,
                           val,

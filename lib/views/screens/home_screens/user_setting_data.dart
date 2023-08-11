@@ -103,21 +103,7 @@ class UserSettingPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('User Settings'),
         actions: [
-          IconButton(
-            onPressed: () async {
-              Get.defaultDialog(
-                title: 'calibrate sensor',
-                content: TextButton(
-                  onPressed: () async {
-                    Get.back();
-                    await userSettingController.clibLDR();
-                  },
-                  child: const Text('sure'),
-                ),
-              );
-            },
-            icon: const Icon(Icons.solar_power_outlined),
-          )
+
         ],
       ),
       floatingActionButton: FloatingActionButton(

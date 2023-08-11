@@ -10,6 +10,8 @@ import 'package:invertar_us/core/services/services.dart';
 import 'package:invertar_us/data/datasource/remote/data-remote/getDataInfo.dart';
 import 'package:invertar_us/data/model/dataInfoModel.dart';
 
+import '../../data/datasource/remote/data-remote/getCalibLDR.dart';
+
 class InverterDataController extends GetxController {
   StatusRequest statusRequest = StatusRequest.loading;
   final InfoData infoData = InfoData(Get.find());
@@ -96,25 +98,21 @@ class InverterDataController extends GetxController {
   }
 
   String ss = '';
-  Future getInfoData(bool showLoading) async {
 
+  Future getInfoData(bool showLoading) async {
     if (showLoading) {
       statusRequest = StatusRequest.loading;
       update();
     }
 
-    Map response =
-
-
-
-    await infoData.getInfoData(
+    Map<dynamic, dynamic> response = await infoData.getInfoData(
       token: myServices.sharedPreferences.getString('token').toString(),
     );
     ss = response.toString();
 
     statusRequest = handlingData(response);
     if (statusRequest == StatusRequest.success) {
-      if (response['Success'] ) {
+      if (response['Success']) {
         dataList1.clear();
         faultsList1.clear();
         DataListModel.fromJson(response['data List'][0])
@@ -135,7 +133,6 @@ class InverterDataController extends GetxController {
             .toJson()
             .forEach((key, value) {
           faultsList1.add({key: value});
-
         });
         update();
       } else {
@@ -145,7 +142,6 @@ class InverterDataController extends GetxController {
       Get.snackbar('Warning', 'Server Error');
       statusRequest = StatusRequest.failure;
     }
-
   }
 
   int currentPage = 0;
@@ -184,13 +180,40 @@ class InverterDataController extends GetxController {
     update();
   }
 
+  final CalibLDRData projectedPowerData = CalibLDRData(Get.find());
+  String errorLDRMessage = '';
+  bool isReading = false;
+
+  getProjectedPower2() async {
+    var response = await projectedPowerData.getProjectedPowerData(
+      token: myServices.sharedPreferences.getString('token').toString(),
+    );
+    statusRequest = handlingData(response);
+    isReading = !isReading;
+    if (statusRequest == StatusRequest.success) {
+      if (response['Success']) {
+        errorLDRMessage = '';
+        projectedPower = response['Projected Power Watt'];
+      } else {
+        // Get.snackbar('Warning', response['Message']);
+        errorLDRMessage = response['Message'];
+      }
+    } else {
+      // Get.snackbar('Warning', response['Message']);
+      errorLDRMessage = response['Message'];
+      statusRequest = StatusRequest.failure;
+    }
+
+    statusRequest = StatusRequest.success;
+    update();
+  }
+
   getProjectedPower() {
-    Timer.periodic(Duration(seconds: readTime), (timer) {
-     projectedPower = 3000 + (Random().nextInt(500)/3);
-     projectedPower = projectedPower;
-     update();
-     print('projectedPower : ');
-     print(projectedPower);
+    Timer.periodic(Duration(seconds: readTime), (timer) async {
+      // projectedPower = 3000 + (Random().nextInt(500) / 3);
+      await getProjectedPower2();
+      print('projectedPower : ');
+      print(projectedPower);
     });
   }
 }

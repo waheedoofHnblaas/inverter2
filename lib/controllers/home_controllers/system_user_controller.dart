@@ -8,7 +8,6 @@ import '../../core/function/handlingdata.dart';
 import '../../core/services/services.dart';
 import '../../data/datasource/remote/auth-remote/userDetails.dart';
 import '../../route.dart';
-import 'inverterCommands_controller.dart';
 
 class SystemUserControllerImp extends GetxController {
   StatusRequest statusRequest = StatusRequest.none;
@@ -68,9 +67,9 @@ class SystemUserControllerImp extends GetxController {
     UserSettingController().dispose();
     InverterSettingsController().dispose();
     SystemUserControllerImp().dispose();
-    myServices.sharedPreferences.clear().whenComplete(() {
-      Get.offAllNamed(AppPages.login);
-    });
+    Get.offAllNamed(AppPages.login);
+    // myServices.sharedPreferences.clear().whenComplete(() {
+    // });
   }
 
   void toRegisterPage() {
@@ -86,10 +85,11 @@ class SystemUserControllerImp extends GetxController {
   }
 
   Future<void> toInverterSettingsPage() async {
+    InverterSettingsController inverterSettingsController = Get.find();
     UserSettingController().update();
-    await InverterSettingsController().getSettingsData();
-    InverterSettingsController().update();
-    Get.toNamed(AppPages.inverterSettingPage);
+    await inverterSettingsController.getSettingsData();
+    await inverterSettingsController.resetEditSettingsMap();
+     Get.toNamed(AppPages.inverterSettingPage);
   }
 
   final ResetData resetData = ResetData(Get.find());
