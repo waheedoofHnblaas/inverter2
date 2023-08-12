@@ -6,6 +6,7 @@ import 'core/class/crud.dart';
 class InitialBinding extends Bindings {
   @override
   void dependencies() {
+    // Get.put(GetMaterialController());
     Get.put(Crud());
     Get.put(LoginControllerImp());
 

@@ -146,7 +146,6 @@ class UserSettingPage extends StatelessWidget {
               userSettingController.solarPanels.text,
               userSettingController.singleSolarMaxPower.text,
             );
-            await userSettingController.getUserReadTimeData();
           }
         },
       ),

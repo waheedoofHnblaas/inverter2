@@ -23,7 +23,7 @@ class HomeSystemDataPage extends StatelessWidget {
     Get.put(UserSettingController());
     Get.put(SystemUserControllerImp(), permanent: false);
     Get.put(InverterSettingsController(), permanent: false);
-    Get.put(InverterCommandsController());
+    Get.put(InverterCommandsController(), permanent: true);
     InverterDataController inverterDataController = Get.put(
       InverterDataController(),
     );
@@ -221,7 +221,7 @@ class HomeSystemDataPage extends StatelessWidget {
             ),
           ),
           child: SizedBox(
-            height: Get.height/18,
+            height: Get.height / 18,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Row(
@@ -415,27 +415,38 @@ class HomeSystemDataPage extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      !homeController.isAdmin
-                          ? Container()
-                          : cardWidget(
-                              'Wattage',
-                              (inverterDataController.projectedPower -
-                                      getDataValue(6))
-                                  .toStringAsFixed(1),
-                              Image.asset(AppImagesAssets.watt, width: 35),
-                            ),
+                      // !homeController.isAdmin
+                      //     ? Container()
+                      //     :
+                      cardWidget(
+                        'Wattage',
+                        (inverterDataController.projectedPower -
+                                    getDataValue(6)) <
+                                0
+                            ? 0
+                            : (inverterDataController.projectedPower -
+                                    getDataValue(6))
+                                .toStringAsFixed(1),
+                        Image.asset(AppImagesAssets.watt, width: 35),
+                      ),
                       cardWidget(
                         'Ampere',
                         ((inverterDataController.projectedPower -
-                                    getDataValue(6)) /
-                                getDataValue(4))
-                            .toStringAsFixed(1),
+                                        getDataValue(6)) /
+                                    getDataValue(4)) <
+                                0
+                            ? 0
+                            : ((inverterDataController.projectedPower -
+                                        getDataValue(6)) /
+                                    getDataValue(4))
+                                .toStringAsFixed(1),
                         Image.asset(AppImagesAssets.ammeter, width: 35),
                       )
                     ],
                   ),
                 )
               : Container(
+                  height: Get.height / 18,
                   decoration: BoxDecoration(
                     color: Get.theme.primaryColor.withOpacity(0.2),
                     borderRadius: const BorderRadius.all(
@@ -447,7 +458,12 @@ class HomeSystemDataPage extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text(inverterDataController.errorLDRMessage),
+                        child: inverterDataController.errorLDRMessage == 'null'
+                            ? SizedBox(
+                                width: Get.width / 4,
+                                child: const LinearProgressIndicator(),
+                              )
+                            : Text(inverterDataController.errorLDRMessage),
                       ),
                       CircleAvatar(
                         radius: 8,
@@ -664,7 +680,7 @@ class HomeSystemDataPage extends StatelessWidget {
 
     return GetBuilder<SystemUserControllerImp>(
       builder: (controller) => Scaffold(
-        drawer: Drawer(child: DrawerWidget()),
+        drawer: Drawer(width: Get.width / 1.5, child: DrawerWidget()),
         appBar: AppBar(
           centerTitle: true,
           primary: true,

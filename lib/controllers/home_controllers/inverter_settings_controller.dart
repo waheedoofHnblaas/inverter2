@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:invertar_us/data/datasource/remote/data-remote/editInverterSettings.dart';
 import '../../core/class/statusrequest.dart';
@@ -14,8 +16,9 @@ class InverterSettingsController extends GetxController {
   final EditInverterSettingsData editInverterSettingsData =
       EditInverterSettingsData(Get.find());
   MyServices myServices = Get.find();
-  Map<String, dynamic> inverterSettingsMap ={};
+  Map<String, dynamic> inverterSettingsMap = {};
   List<dynamic> editInverterSettingsValuesList = [];
+
   // bool showEdit = false;
 
   @override
@@ -35,49 +38,49 @@ class InverterSettingsController extends GetxController {
   Future getSettingsData() async {
     statusRequest = StatusRequest.loading;
     update();
-    Map response =
-    // {
-    //   "Success": true,
-    //   "Inverter Settings": {
-    //     "ac_input_voltage": 220.0,
-    //     "ac_input_current": 13.6,
-    //     "ac_output_voltage": 220.0,
-    //     "ac_output_frequency": 50.0,
-    //     "ac_output_current": 13.6,
-    //     "ac_output_apparent_power": 3000,
-    //     "ac_output_active_power": 3000,
-    //     "battery_voltage": 24.0,
-    //     "battery_recharge_voltage": 23.0,
-    //     "battery_under_voltage": 21.5,
-    //     "battery_bulk_charge_voltage": 29.2,
-    //     "battery_float_charge_voltage": 27.0,
-    //     "battery_type": "Flooded",
-    //     "max_ac_charging_current": "20",
-    //     "max_charging_current": 30,
-    //     "input_voltage_range": "UPS",
-    //     "output_source_priority": "Utility first",
-    //     "charger_source_priority": "Solar + Utility",
-    //     "max_parallel_units": 1,
-    //     "machine_type": "Off Grid",
-    //     "topology": "transformerless",
-    //     "output_mode": "single machine output",
-    //     "battery_redischarge_voltage": 27.0,
-    //     "pv_ok_condition": "As long as one unit of inverters has connect PV, parallel system will consider PV OK",
-    //     "pv_power_balance": "PV input max power will be the sum of the max charged power and loads power",
-    //     "lcd_backlight": "enabled",
-    //     "primary_source_interrupt_alarm": "enabled",
-    //     "record_fault_code": "enabled",
-    //     "buzzer": "disabled",
-    //     "overload_bypass": "disabled",
-    //     "power_saving": "disabled",
-    //     "lcd_reset_to_default": "disabled",
-    //     "overload_restart": "disabled",
-    //     "over_temperature_restart": "disabled",
-    //     "create at": "2023-08-10 09:18:56"
-    //   }
-    // };
+    Map<dynamic, dynamic> response =
+        // {
+        //   "Success": true,
+        //   "Inverter Settings": {
+        //     "ac_input_voltage": 220.0,
+        //     "ac_input_current": 13.6,
+        //     "ac_output_voltage": 220.0,
+        //     "ac_output_frequency": 50.0,
+        //     "ac_output_current": 13.6,
+        //     "ac_output_apparent_power": 3000,
+        //     "ac_output_active_power": 3000,
+        //     "battery_voltage": 24.0,
+        //     "battery_recharge_voltage": 23.0,
+        //     "battery_under_voltage": 21.5,
+        //     "battery_bulk_charge_voltage": 29.2,
+        //     "battery_float_charge_voltage": 27.0,
+        //     "battery_type": "Flooded",
+        //     "max_ac_charging_current": "20",
+        //     "max_charging_current": 30,
+        //     "input_voltage_range": "UPS",
+        //     "output_source_priority": "Utility first",
+        //     "charger_source_priority": "Solar + Utility",
+        //     "max_parallel_units": 1,
+        //     "machine_type": "Off Grid",
+        //     "topology": "transformerless",
+        //     "output_mode": "single machine output",
+        //     "battery_redischarge_voltage": 27.0,
+        //     "pv_ok_condition": "As long as one unit of inverters has connect PV, parallel system will consider PV OK",
+        //     "pv_power_balance": "PV input max power will be the sum of the max charged power and loads power",
+        //     "lcd_backlight": "enabled",
+        //     "primary_source_interrupt_alarm": "enabled",
+        //     "record_fault_code": "enabled",
+        //     "buzzer": "disabled",
+        //     "overload_bypass": "disabled",
+        //     "power_saving": "disabled",
+        //     "lcd_reset_to_default": "disabled",
+        //     "overload_restart": "disabled",
+        //     "over_temperature_restart": "disabled",
+        //     "create at": "2023-08-10 09:18:56"
+        //   }
+        // };
 
-    await inverterSettingsData.getInverterSettingsData(
+        await inverterSettingsData.getInverterSettingsData(
       token: myServices.sharedPreferences.getString('token').toString(),
     );
 
@@ -88,9 +91,8 @@ class InverterSettingsController extends GetxController {
             InverterSettingsModel.fromJson(response['Inverter Settings'])
                 .toJson();
         editInverterSettingsValuesList = inverterSettingsMap.values.toList();
-       } else {
+      } else {
         Get.snackbar('Warring', 'auth error');
-
       }
     } else {
       Get.snackbar('Warring', 'server error');
@@ -127,8 +129,10 @@ class InverterSettingsController extends GetxController {
         Get.snackbar('Warring', response['Message']);
       }
     } else {
-
-      Get.snackbar('Warning',  'server error',);
+      Get.snackbar(
+        'Warning',
+        'server error',
+      );
 
       statusRequest = StatusRequest.failure;
     }

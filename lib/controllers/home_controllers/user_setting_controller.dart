@@ -56,19 +56,25 @@ class UserSettingController extends GetxController {
     homeNameText = TextEditingController(
       text: userSettingModel.homeName.toString(),
     );
-    if (!myServices.sharedPreferences.containsKey('${homeNameText.text}homey')) {
-      await myServices.sharedPreferences.setStringList('${homeNameText.text}homey', [
+    await saveHomeValue();
+
+    super.onInit();
+  }
+
+  saveHomeValue() async {
+    if (!myServices.sharedPreferences
+        .containsKey('${homeNameText.text}homey')) {
+      await myServices.sharedPreferences
+          .setStringList('${homeNameText.text}homey', [
         myServices.sharedPreferences.getString('link').toString(),
         myServices.sharedPreferences.getString('username').toString(),
         myServices.sharedPreferences.getString('password').toString(),
         homeNameText.text,
       ]);
     }
-
-    super.onInit();
   }
 
-  Future clibLDR() async {
+  Future clibLdr() async {
     statusRequest = StatusRequest.loading;
     update();
 
@@ -76,21 +82,16 @@ class UserSettingController extends GetxController {
       token: myServices.sharedPreferences.getString('token').toString(),
     );
 
-    print(response);
-    print(response);
-    print(response);
-    print(response);
     statusRequest = handlingData(response);
     if (statusRequest == StatusRequest.success) {
       if (response['Success']) {
-        await getUserSettingData();
+        Get.snackbar('Warning', 'Confirm Sensor Successfully');
+        // await getUserSettingData();
       } else {
         Get.snackbar('Warning', response['Message']);
       }
     } else {
       Get.snackbar('Warning', response['Message']);
-
-      statusRequest = StatusRequest.failure;
     }
 
     statusRequest = StatusRequest.success;
@@ -117,8 +118,6 @@ class UserSettingController extends GetxController {
       }
     } else {
       Get.snackbar('Warning', 'Server Error');
-
-      statusRequest = StatusRequest.failure;
     }
 
     statusRequest = StatusRequest.success;
@@ -129,17 +128,8 @@ class UserSettingController extends GetxController {
   resetTimeWithReadTime() async {
     InverterDataController inverterDataController = Get.find();
     inverterDataController.timer.cancel();
-
-    inverterDataController.update();
     inverterDataController.readTime = await getUserSettingData();
-
-    inverterDataController.timer = Timer.periodic(
-      Duration(seconds: inverterDataController.readTime),
-      (t) {
-        print(inverterDataController.readTime);
-        inverterDataController.getInfoData2();
-      },
-    );
+    await inverterDataController.getTimer();
   }
 
   Future<int> getUserSettingData() async {
@@ -208,6 +198,7 @@ class UserSettingController extends GetxController {
         UserSettingModel res = UserSettingModel.fromJson(response);
         userSettingModel2 = res.userSetting![0];
         Get.snackbar('Update', 'you change settings');
+        await getUserSettingData();
       } else {
         Get.snackbar('Warring', response['Message']);
       }
@@ -216,9 +207,13 @@ class UserSettingController extends GetxController {
 
       statusRequest = StatusRequest.failure;
     }
-    await getUserSettingData();
     update();
   }
+
+  // getData() async {
+  //   await getUserSettingData();
+  //   await getUserReadTimeData();
+  // }
 
   toUserSettingPage() {
     Get.toNamed(AppPages.userSettingPage);

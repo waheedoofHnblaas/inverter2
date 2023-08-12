@@ -28,7 +28,7 @@ class InverterDataController extends GetxController {
 
   RxBool read = false.obs;
 
-  double projectedPower = 0;
+  double projectedPower = 0.0;
 
   @override
   void onInit() {
@@ -39,18 +39,19 @@ class InverterDataController extends GetxController {
 
   repeatReading() async {
     readTime = await userSettingController.getUserSettingData();
-
     print(readTime);
+    await getTimer();
+    await getProjectedPower();
+  }
+
+  getTimer()async{
     timer = Timer.periodic(
       Duration(seconds: readTime),
-      (t) {
-        print(readTime);
+          (t) {
         read.value = !read.value;
         getInfoData2();
       },
     );
-
-    await getProjectedPower();
   }
 
   Future getInfoData2() async {
@@ -105,7 +106,7 @@ class InverterDataController extends GetxController {
       update();
     }
 
-    Map<dynamic, dynamic> response = await infoData.getInfoData(
+    var response = await infoData.getInfoData(
       token: myServices.sharedPreferences.getString('token').toString(),
     );
     ss = response.toString();
@@ -181,35 +182,43 @@ class InverterDataController extends GetxController {
   }
 
   final CalibLDRData projectedPowerData = CalibLDRData(Get.find());
-  String errorLDRMessage = '';
+  String errorLDRMessage = 'null';
   bool isReading = false;
 
   getProjectedPower2() async {
-    var response = await projectedPowerData.getProjectedPowerData(
-      token: myServices.sharedPreferences.getString('token').toString(),
-    );
-    statusRequest = handlingData(response);
-    isReading = !isReading;
-    if (statusRequest == StatusRequest.success) {
-      if (response['Success']) {
-        errorLDRMessage = '';
-        projectedPower = response['Projected Power Watt'];
+    try{
+      var response = await projectedPowerData.getProjectedPowerData(
+        token: myServices.sharedPreferences.getString('token').toString(),
+      );
+      statusRequest = handlingData(response);
+      isReading = !isReading;
+      if (statusRequest == StatusRequest.success) {
+        if (response['Success']) {
+          projectedPower =
+              double.parse(response['Projected Power Watt'].toString());
+          errorLDRMessage = '';
+        } else {
+          // Get.snackbar('Warning', response['Message']);
+          errorLDRMessage = response['Message'].toString();
+        }
       } else {
         // Get.snackbar('Warning', response['Message']);
-        errorLDRMessage = response['Message'];
+        errorLDRMessage = response['Message'].toString();
       }
-    } else {
-      // Get.snackbar('Warning', response['Message']);
-      errorLDRMessage = response['Message'];
-      statusRequest = StatusRequest.failure;
+
+      statusRequest = StatusRequest.success;
+      update();
+    }catch(e){
+      print('==============================$e');
+      Get.snackbar('getProjectedPower2', e.toString());
     }
 
-    statusRequest = StatusRequest.success;
-    update();
   }
 
+  Timer timer2 = Timer(const Duration(seconds: 10), () {});
+
   getProjectedPower() {
-    Timer.periodic(Duration(seconds: readTime), (timer) async {
+    timer2 = Timer.periodic(Duration(seconds: readTime), (timer) async {
       // projectedPower = 3000 + (Random().nextInt(500) / 3);
       await getProjectedPower2();
       print('projectedPower : ');

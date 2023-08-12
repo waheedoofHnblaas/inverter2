@@ -12,7 +12,8 @@ class InverterSettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    InverterCommandsController inverterCommandsController = Get.find();
+    InverterCommandsController inverterCommandsController =
+        Get.put(InverterCommandsController());
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: Container(
@@ -32,7 +33,6 @@ class InverterSettingPage extends StatelessWidget {
                       itemCount: inverterSettingsController
                           .editInverterSettingsValuesList.length,
                       itemBuilder: (context, index) {
-
                         String val = inverterSettingsController
                             .editInverterSettingsValuesList[index]
                             .toString();
@@ -44,13 +44,12 @@ class InverterSettingPage extends StatelessWidget {
                         CommandModel commandModel = CommandModel();
                         // inverterSettingsController.showEdit = false;
 
-                         for (CommandModel command in inverterCommandsController
+                        for (CommandModel command in inverterCommandsController
                             .inverterCommandsList) {
-
                           if (command.commandShortcutInSettings.toString() ==
                               text.toString()) {
                             commandModel = command;
-                             return settingDataCard(
+                            return settingDataCard(
                               text,
                               val,
                               index,
@@ -58,15 +57,13 @@ class InverterSettingPage extends StatelessWidget {
                               true,
                             );
                           }
-
                         }
-                         inverterCommandsController.update();
                         return settingDataCard(
                           text,
                           val,
                           index,
                           commandModel,
-                          false,
+                          true,
                         );
                       },
                     ),

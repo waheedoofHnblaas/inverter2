@@ -38,7 +38,7 @@ Widget settingDataCard(
         ),
         GetBuilder<InverterSettingsController>(
             builder: (inverterSettingsController) {
-          return show
+          return commandModel.boundries!=null
               ? IconButton(
                   onPressed: () {
                     if (val == 'enabled') {

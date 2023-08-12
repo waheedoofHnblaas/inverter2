@@ -9,6 +9,7 @@ import '../../core/services/services.dart';
 import '../../data/datasource/remote/auth-remote/login.dart';
 import '../../data/datasource/remote/data-remote/resetData.dart';
 import '../../route.dart';
+import '../home_controllers/user_setting_controller.dart';
 
 abstract class LoginController extends GetxController {
   login();
@@ -32,12 +33,7 @@ class LoginControllerImp extends LoginController {
 
   @override
   void onInit() async {
-    myServices.sharedPreferences.getKeys().forEach((key) {
-      if (key.contains('homey')) {
-        keys.add(myServices.sharedPreferences.getStringList(key)!);
-      }
-    });
-    update();
+    await getKeysHome();
     if (myServices.sharedPreferences.getString('username') != null) {
       username = TextEditingController(
         text: myServices.sharedPreferences.getString('username').toString(),
@@ -53,6 +49,17 @@ class LoginControllerImp extends LoginController {
       await login();
     }
     super.onInit();
+  }
+
+  getKeysHome() {
+    keys.clear();
+    myServices.sharedPreferences.getKeys().forEach((key) {
+      if (key.contains('homey')) {
+        print(key);
+        keys.add(myServices.sharedPreferences.getStringList(key)!);
+      }
+    });
+    update();
   }
 
   changeShow() {
@@ -94,7 +101,7 @@ class LoginControllerImp extends LoginController {
       serverLinkHost = link.text;
       statusRequest = StatusRequest.loading;
       update();
-      Timer(const Duration(seconds: 15), () {
+      Timer(const Duration(seconds: 10), () {
         if (statusRequest == StatusRequest.loading) {
           statusRequest = StatusRequest.failure;
           update();
@@ -183,5 +190,15 @@ class LoginControllerImp extends LoginController {
     username = TextEditingController(text: serverUserName);
     password = TextEditingController(text: serverPassword);
     await login();
+  }
+
+  removeAuthValue(key) async {
+    print('${key}homey');
+    await myServices.sharedPreferences.remove("${key}homey").whenComplete(
+      () async {
+        await getKeysHome();
+      },
+    );
+    update();
   }
 }

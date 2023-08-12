@@ -10,8 +10,8 @@ import '../../data/datasource/remote/auth-remote/userDetails.dart';
 import '../../route.dart';
 
 class SystemUserControllerImp extends GetxController {
-  StatusRequest statusRequest = StatusRequest.none;
-  StatusRequest statusRequest2 = StatusRequest.none;
+  StatusRequest statusRequest = StatusRequest.success;
+  StatusRequest statusRequest2 = StatusRequest.success;
   final UserDetails userDetails = UserDetails(Get.find());
   MyServices myServices = Get.find();
   String username = '';
@@ -19,8 +19,6 @@ class SystemUserControllerImp extends GetxController {
 
   @override
   void onInit() async {
-    print(myServices.sharedPreferences.get('username'));
-    print(myServices.sharedPreferences.get('password'));
     username = myServices.sharedPreferences.get('username').toString();
     await getUserData();
     super.onInit();
@@ -61,15 +59,13 @@ class SystemUserControllerImp extends GetxController {
     }
   }
 
-  void logout() {
-    InverterDataController().timer.cancel();
-    InverterDataController().dispose();
-    UserSettingController().dispose();
-    InverterSettingsController().dispose();
-    SystemUserControllerImp().dispose();
-    Get.offAllNamed(AppPages.login);
-    // myServices.sharedPreferences.clear().whenComplete(() {
-    // });
+  Future<void> logout() async {
+    UserSettingController userSettingController = Get.find();
+    InverterDataController inverterDataController = Get.find();
+    inverterDataController.timer.cancel();
+    inverterDataController.timer2.cancel();
+    await userSettingController.saveHomeValue();
+    await Get.offAllNamed(AppPages.login);
   }
 
   void toRegisterPage() {
@@ -86,10 +82,11 @@ class SystemUserControllerImp extends GetxController {
 
   Future<void> toInverterSettingsPage() async {
     InverterSettingsController inverterSettingsController = Get.find();
-    UserSettingController().update();
-    await inverterSettingsController.getSettingsData();
+    // await inverterSettingsController.getSettingsData();
     await inverterSettingsController.resetEditSettingsMap();
-     Get.toNamed(AppPages.inverterSettingPage);
+    UserSettingController userSettingController = Get.find();
+    userSettingController.update();
+    await Get.toNamed(AppPages.inverterSettingPage);
   }
 
   final ResetData resetData = ResetData(Get.find());
@@ -148,8 +145,8 @@ class SystemUserControllerImp extends GetxController {
         middleText: 'something is wrong',
         backgroundColor: Get.theme.backgroundColor,
       );
-      statusRequest2 = StatusRequest.failure;
     }
+    statusRequest2 = StatusRequest.success;
     update();
     print('validate');
   }

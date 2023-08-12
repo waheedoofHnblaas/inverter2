@@ -4,7 +4,7 @@ class InverterCommandsModel {
 
   InverterCommandsModel({this.success, this.commandsList});
 
-  InverterCommandsModel.fromJson(Map<String, dynamic> json) {
+  InverterCommandsModel.fromJson(Map<dynamic, dynamic> json) {
     success = json['Success'];
     if (json['command List'] != null) {
       commandsList = <CommandModel>[];
