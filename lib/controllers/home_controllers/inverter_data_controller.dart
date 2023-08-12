@@ -44,10 +44,10 @@ class InverterDataController extends GetxController {
     await getProjectedPower();
   }
 
-  getTimer()async{
+  getTimer() async {
     timer = Timer.periodic(
       Duration(seconds: readTime),
-          (t) {
+      (t) {
         read.value = !read.value;
         getInfoData2();
       },
@@ -186,7 +186,7 @@ class InverterDataController extends GetxController {
   bool isReading = false;
 
   getProjectedPower2() async {
-    try{
+    try {
       var response = await projectedPowerData.getProjectedPowerData(
         token: myServices.sharedPreferences.getString('token').toString(),
       );
@@ -195,7 +195,9 @@ class InverterDataController extends GetxController {
       if (statusRequest == StatusRequest.success) {
         if (response['Success']) {
           projectedPower =
-              double.parse(response['Projected Power Watt'].toString());
+              double.parse(response['Projected Power Watt'].toString()) == 0
+                  ? 0.0
+                  : double.parse(response['Projected Power Watt'].toString());
           errorLDRMessage = '';
         } else {
           // Get.snackbar('Warning', response['Message']);
@@ -208,14 +210,14 @@ class InverterDataController extends GetxController {
 
       statusRequest = StatusRequest.success;
       update();
-    }catch(e){
+    } catch (e) {
       print('==============================$e');
-      Get.snackbar('getProjectedPower2', e.toString());
+      Get.snackbar('Warning', 'When Getting New Data');
     }
-
+    update();
   }
 
-  Timer timer2 = Timer(const Duration(seconds: 10), () {});
+  Timer timer2 = Timer(const Duration(seconds: 5), () {});
 
   getProjectedPower() {
     timer2 = Timer.periodic(Duration(seconds: readTime), (timer) async {

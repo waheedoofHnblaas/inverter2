@@ -99,13 +99,18 @@ class DrawerWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-                        InkWell(
-                          onTap: () async {
-                            // homeController.toInverterSettingsPage();
-                            await UserSettingController().toUserSettingPage();
-                          },
-                          child: const ListTile(
-                            title: Text('Edit User Settings'),
+                        GetBuilder<UserSettingController>(
+                          builder: (controller) => HandelingView(
+                            statusRequest: controller.statusRequest,
+                            widget: InkWell(
+                              onTap: () async {
+                                // homeController.toInverterSettingsPage();
+                                await controller.toUserSettingPage();
+                              },
+                              child: const ListTile(
+                                title: Text('Edit User Settings'),
+                              ),
+                            ),
                           ),
                         ),
                         GetBuilder<UserSettingController>(
@@ -118,9 +123,7 @@ class DrawerWidget extends StatelessWidget {
                                   content: const Text(''),
                                   onConfirm: () async {
                                     Get.back();
-                                    UserSettingController userController =
-                                        Get.find();
-                                    await userController.clibLdr();
+                                    await UserSettingController().clibLdr();
                                   },
                                 );
                               },

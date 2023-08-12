@@ -22,34 +22,37 @@ class RegisterControllerImp extends GetxController {
   }
 
   Future<void> register() async {
-    statusRequest = StatusRequest.loading;
-    update();
-    var response = await registrationData.registrationData(
-      token: myServices.sharedPreferences.getString('token').toString(),
-      username: username.text,
-      password: password.text,
-    );
-    statusRequest = handlingData(response);
-    if (statusRequest == StatusRequest.success) {
-      if (response['Success'] == true) {
-        print('success registration');
-        Get.back();
+    if (formState.currentState!.validate()) {
+      statusRequest = StatusRequest.loading;
+      update();
+      var response = await registrationData.registrationData(
+        token: myServices.sharedPreferences.getString('token').toString(),
+        username: username.text,
+        password: password.text,
+      );
+      statusRequest = handlingData(response);
+      if (statusRequest == StatusRequest.success) {
+        if (response['Success'] == true) {
+          print('success registration');
+          Get.back();
+        } else {
+          print(response['Message']);
+        }
+        Get.defaultDialog(
+          title: 'Warning',
+          middleText: response['Message'],
+          backgroundColor: Get.theme.backgroundColor,
+        );
       } else {
-        print(response['Message']);
+        Get.defaultDialog(
+          title: 'Warning',
+          middleText: 'something is wrong',
+          backgroundColor: Get.theme.backgroundColor,
+        );
+        statusRequest = StatusRequest.failure;
       }
-      Get.defaultDialog(
-        title: 'Warning',
-        middleText: response['Message'],
-        backgroundColor: Get.theme.backgroundColor,
-      );
-    } else {
-      Get.defaultDialog(
-        title: 'Warning',
-        middleText: 'something is wrong',
-        backgroundColor: Get.theme.backgroundColor,
-      );
-      statusRequest = StatusRequest.failure;
     }
+
 
     update();
     print('validate');

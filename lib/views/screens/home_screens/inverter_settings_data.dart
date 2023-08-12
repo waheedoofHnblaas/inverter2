@@ -13,7 +13,7 @@ class InverterSettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InverterCommandsController inverterCommandsController =
-        Get.put(InverterCommandsController());
+        Get.put(InverterCommandsController(), permanent: true);
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: Container(
@@ -42,28 +42,27 @@ class InverterSettingPage extends StatelessWidget {
                             .toList()[index];
 
                         CommandModel commandModel = CommandModel();
-                        // inverterSettingsController.showEdit = false;
 
                         for (CommandModel command in inverterCommandsController
                             .inverterCommandsList) {
                           if (command.commandShortcutInSettings.toString() ==
                               text.toString()) {
                             commandModel = command;
-                            return settingDataCard(
+                            return SettingsCardWidget(
                               text,
                               val,
-                              index,
                               commandModel,
                               true,
+                              index,
                             );
                           }
                         }
-                        return settingDataCard(
+                        return SettingsCardWidget(
                           text,
                           val,
-                          index,
                           commandModel,
-                          true,
+                          false,
+                          index,
                         );
                       },
                     ),

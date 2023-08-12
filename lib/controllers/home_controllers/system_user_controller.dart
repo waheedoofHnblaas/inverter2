@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:invertar_us/controllers/home_controllers/inverter_data_controller.dart';
 import 'package:invertar_us/controllers/home_controllers/inverter_settings_controller.dart';
@@ -81,9 +83,12 @@ class SystemUserControllerImp extends GetxController {
   }
 
   Future<void> toInverterSettingsPage() async {
-    InverterSettingsController inverterSettingsController = Get.find();
-    // await inverterSettingsController.getSettingsData();
-    await inverterSettingsController.resetEditSettingsMap();
+    Timer(const Duration(seconds: 2), () async {
+      InverterSettingsController inverterSettingsController = Get.find();
+
+      await inverterSettingsController.resetEditSettingsMap();
+      inverterSettingsController.update();
+    });
     UserSettingController userSettingController = Get.find();
     userSettingController.update();
     await Get.toNamed(AppPages.inverterSettingPage);

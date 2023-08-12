@@ -39,6 +39,12 @@ class UserSettingController extends GetxController {
 
   @override
   Future<void> onInit() async {
+    await initMethod();
+
+    super.onInit();
+  }
+
+  initMethod() async {
     await getUserSettingData();
     readTimeText = TextEditingController(
       text: userSettingModel.readTime.toString(),
@@ -57,8 +63,7 @@ class UserSettingController extends GetxController {
       text: userSettingModel.homeName.toString(),
     );
     await saveHomeValue();
-
-    super.onInit();
+    update();
   }
 
   saveHomeValue() async {
@@ -88,10 +93,10 @@ class UserSettingController extends GetxController {
         Get.snackbar('Warning', 'Confirm Sensor Successfully');
         // await getUserSettingData();
       } else {
-        Get.snackbar('Warning', response['Message']);
+        Get.snackbar('Warning', response['Message'].toString());
       }
     } else {
-      Get.snackbar('Warning', response['Message']);
+      Get.snackbar('Warning', 'Connection Error');
     }
 
     statusRequest = StatusRequest.success;
@@ -215,7 +220,8 @@ class UserSettingController extends GetxController {
   //   await getUserReadTimeData();
   // }
 
-  toUserSettingPage() {
+  toUserSettingPage() async {
+    await initMethod();
     Get.toNamed(AppPages.userSettingPage);
   }
 

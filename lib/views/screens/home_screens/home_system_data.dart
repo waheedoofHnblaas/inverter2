@@ -23,7 +23,6 @@ class HomeSystemDataPage extends StatelessWidget {
     Get.put(UserSettingController());
     Get.put(SystemUserControllerImp(), permanent: false);
     Get.put(InverterSettingsController(), permanent: false);
-    Get.put(InverterCommandsController(), permanent: true);
     InverterDataController inverterDataController = Get.put(
       InverterDataController(),
     );
@@ -180,30 +179,33 @@ class HomeSystemDataPage extends StatelessWidget {
     }
 
     titleCard(text, icon) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: Get.width / 3.2,
-            ),
-            Row(
-              children: [
-                icon,
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  text,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+      return SizedBox(
+        width: Get.width,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: Get.width / 3.2,
+              ),
+              Row(
+                children: [
+                  icon,
+                  const SizedBox(
+                    width: 10,
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Text(
+                    text,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -232,7 +234,7 @@ class HomeSystemDataPage extends StatelessWidget {
                     width: 4,
                   ),
                   Text(
-                    text,
+                    text.toString(),
                     style: const TextStyle(
                       fontWeight: FontWeight.w100,
                       fontSize: 14,
@@ -240,7 +242,7 @@ class HomeSystemDataPage extends StatelessWidget {
                   ),
                   Expanded(child: Container()),
                   Text(
-                    value,
+                    value.toString(),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
@@ -407,6 +409,7 @@ class HomeSystemDataPage extends StatelessWidget {
           ),
           inverterDataController.errorLDRMessage == ''
               ? Container(
+                  width: Get.width,
                   decoration: BoxDecoration(
                     color: Get.theme.primaryColor.withOpacity(0.4),
                     borderRadius: const BorderRadius.all(
@@ -446,7 +449,7 @@ class HomeSystemDataPage extends StatelessWidget {
                   ),
                 )
               : Container(
-                  height: Get.height / 18,
+                  width: Get.width,
                   decoration: BoxDecoration(
                     color: Get.theme.primaryColor.withOpacity(0.2),
                     borderRadius: const BorderRadius.all(
@@ -460,7 +463,7 @@ class HomeSystemDataPage extends StatelessWidget {
                         padding: const EdgeInsets.all(5.0),
                         child: inverterDataController.errorLDRMessage == 'null'
                             ? SizedBox(
-                                width: Get.width / 4,
+                                width: Get.width / 3,
                                 child: const LinearProgressIndicator(),
                               )
                             : Text(inverterDataController.errorLDRMessage),
@@ -715,31 +718,21 @@ class HomeSystemDataPage extends StatelessWidget {
               child: Center(
                 child: HandelingRequest(
                   statusRequest: inverterDataController.statusRequest,
-                  widget:
-                      // SingleChildScrollView(
-                      //   child: Column(
-                      //     children: [
-                      //       Text(inverterDataController.dataList1.toString()),
-                      //       Text('===========responce==============='),
-                      //       Text(inverterDataController.ss.toString()),
-                      //     ],
-                      //   ),
-                      // )
-                      inverterDataController.dataList1.isNotEmpty
-                          ? PageView(
-                              controller: inverterDataController.pageController,
-                              onPageChanged: (int page) {
-                                inverterDataController.changeScroller(page);
-                              },
-                              scrollDirection: Axis.vertical,
-                              children: [
-                                actionsMessagesPage(),
-                                dataFaultsPage(),
-                              ],
-                            )
-                          : const Center(
-                              child: Text('No Connection'),
-                            ),
+                  widget: inverterDataController.dataList1.isNotEmpty
+                      ? PageView(
+                          controller: inverterDataController.pageController,
+                          onPageChanged: (int page) {
+                            inverterDataController.changeScroller(page);
+                          },
+                          scrollDirection: Axis.vertical,
+                          children: [
+                            actionsMessagesPage(),
+                            dataFaultsPage(),
+                          ],
+                        )
+                      : const Center(
+                          child: Text('No Connection'),
+                        ),
                 ),
               ),
             );
